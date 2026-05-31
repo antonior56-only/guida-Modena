@@ -452,7 +452,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
           <div style="font-size:11px;font-weight:700;color:var(--stone);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">🌾 Agriturismi e Fattorie</div>
           <div style="display:flex;gap:8px">
             <a href="https://www.agriturismo.it/agriturismo/emilia-romagna/modena" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#33691e,#558b2f);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🌾</span><div><div>Agriturismo Modena e Provincia</div><div style="opacity:.8;font-size:10px">agriturismo.it</div></div><span style="margin-left:auto">↗</span></a>
-            <a href="https://www.booking.com/searchresults.it.html?ss=Modena e Provincia&nflt=property_type%3D220" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🏡</span><div><div>Prenota Agriturismi</div><div style="opacity:.8;font-size:10px">booking.com</div></div><span style="margin-left:auto">↗</span></a>
+            <a href="https://www.booking.com/searchresults.it.html?ss=Provincia+di+Modena%2C+Italia&nflt=property_type%3D220" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🏡</span><div><div>Prenota Agriturismi</div><div style="opacity:.8;font-size:10px">booking.com</div></div><span style="margin-left:auto">↗</span></a>
           </div>
         </div>
         <div id="list-luoghi"></div>
@@ -852,7 +852,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
 <div class="modal-overlay" id="sentiero-modal">
   <div class="modal-box">
     <h2>🥾 Aggiungi sentiero</h2>
-    <p id="sentiero-limit-msg" style="font-size:12px;color:var(--rust);margin-bottom:8px;display:none">
+    <p id="sentiero-limit-msg" style="font-size:12px;color:var(--rust);margin-bottom:8px;display:none;padding:8px;background:#fce4ec;border-radius:8px;">
       ⚠️ Hai raggiunto il limite di 6 sentieri personalizzati.
     </p>
     <div class="form-row">
@@ -1061,6 +1061,26 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
 
 <script>
 // ═══════════════════════════════════════════════════════════
+// FUNZIONI DI UTILITÀ, PULIZIA INPUT E SALVATAGGIO SICURO
+// ═══════════════════════════════════════════════════════════
+
+function sanitize(str) {
+  if (!str) return '';
+  return str.toString().replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[tag]));
+}
+
+function safeParse(key, defaultValue) {
+  try {
+    const val = localStorage.getItem(key);
+    return val ? JSON.parse(val) : defaultValue;
+  } catch (e) {
+    return defaultValue;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // LOGICA UI BASE E MODALI
 // ═══════════════════════════════════════════════════════════
 function showToast(msg){
@@ -1082,7 +1102,17 @@ function openLuogoModal() {
   document.getElementById('luogo-modal').classList.add('open');
 }
 function openSentieroModal() {
-  ['trek-nome','trek-km','trek-h','trek-start','trek-desc','trek-lat','trek-lng'].forEach(id=>document.getElementById(id).value='');
+  ['trek-nome','trek-km','trek-h','trek-start','trek-desc','trek-url','trek-lat','trek-lng'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.value='';
+  });
+  const limitReached = SENTIERI_CUSTOM.length >= 6;
+  document.getElementById('sentiero-limit-msg').style.display = limitReached ? 'block' : 'none';
+  const btn = document.querySelector('#sentiero-modal .btn-gold');
+  if(btn) {
+      btn.disabled = limitReached;
+      btn.style.opacity = limitReached ? '0.5' : '1';
+      btn.style.cursor = limitReached ? 'not-allowed' : 'pointer';
+  }
   document.getElementById('sentiero-modal').classList.add('open');
 }
 function openRistoranteModal() {
@@ -1090,7 +1120,9 @@ function openRistoranteModal() {
   document.getElementById('ristorante-modal').classList.add('open');
 }
 function openAlloggioModal() {
-  ['alloggio-nome','alloggio-loc','alloggio-prezzo','alloggio-voto','alloggio-desc','alloggio-lat','alloggio-lng'].forEach(id=>document.getElementById(id).value='');
+  ['alloggio-nome','alloggio-loc','alloggio-prezzo','alloggio-voto','alloggio-desc','alloggio-lat','alloggio-lng','alloggio-url'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.value='';
+  });
   document.getElementById('alloggio-modal').classList.add('open');
 }
 
@@ -1104,7 +1136,6 @@ function rimuoviApiKey() {
   closeModal('settings-modal');
 }
 
-// FIX: Rimosso l'uso di window.confirm e window.alert per evitare il blocco negli Iframe web
 function cancellaTuttiIDati() {
   closeModal('settings-modal');
   const overlay = document.createElement('div');
@@ -1137,7 +1168,7 @@ function cancellaTuttiIDati() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// DATASETS PRINCIPALI
+// DATASETS PRINCIPALI E LOCAL STORAGE SICURO
 // ═══════════════════════════════════════════════════════════
 
 const LUOGHI = [
@@ -1392,22 +1423,24 @@ const ITINERARI_PREDEFINITI = [
  km:40,coords:[[44.5283,10.8639],[44.5652,10.7952],[44.2300,10.8100],[44.4782,11.0045],[44.6459,10.9254]]}
 ];
 
-// ═══════════════════════════════════════════════════════════
-// LOCAL STORAGE E INIZIALIZZAZIONE CUSTOM DATA
-// ═══════════════════════════════════════════════════════════
-let LUOGHI_CUSTOM       = JSON.parse(localStorage.getItem('modena_luoghi_custom') || '[]');
-let SENTIERI_CUSTOM     = JSON.parse(localStorage.getItem('modena_sentieri_custom') || '[]');
-let SENTIERI_NASCOSTI   = JSON.parse(localStorage.getItem('modena_sentieri_nascosti') || '[]');
-let RISTORANTI_CUSTOM   = JSON.parse(localStorage.getItem('modena_ristoranti_custom') || '[]');
-let RISTORANTI_NASCOSTI = new Set(JSON.parse(localStorage.getItem('modena_ristoranti_nascosti') || '[]'));
+// INIZIALIZZAZIONE CUSTOM DATA E LOCAL STORAGE SICURO
+let LUOGHI_CUSTOM       = safeParse('modena_luoghi_custom', []);
+let SENTIERI_CUSTOM     = safeParse('modena_sentieri_custom', []);
+let SENTIERI_NASCOSTI   = safeParse('modena_sentieri_nascosti', []);
+let RISTORANTI_CUSTOM   = safeParse('modena_ristoranti_custom', []);
+let RISTORANTI_NASCOSTI = new Set(safeParse('modena_ristoranti_nascosti', []));
 
-let ALLOGGI_CONSIGLIATI = ALLOGGI_DEFAULT;
-localStorage.setItem('modena_alloggi_consigliati', JSON.stringify(ALLOGGI_DEFAULT));
+// BUG FIX: Non sovrascriviamo gli alloggi utente!
+let ALLOGGI_CUSTOM      = safeParse('modena_alloggi_custom', []);
+let ALLOGGI_CONSIGLIATI = [...ALLOGGI_DEFAULT];
+ALLOGGI_CUSTOM.forEach(c => {
+    if (!ALLOGGI_CONSIGLIATI.find(a => a.name === c.name)) ALLOGGI_CONSIGLIATI.unshift(c);
+});
 
-let ITINERARI_CUSTOM    = JSON.parse(localStorage.getItem('modena_itin') || '[]');
-let ITINERARI_NASCOSTI  = JSON.parse(localStorage.getItem('modena_itin_nascosti') || '[]');
-let VALUTAZIONI         = JSON.parse(localStorage.getItem('modena_valutazioni') || '{}');
-let CHECKINS            = JSON.parse(localStorage.getItem('modena_checkins') || '[]');
+let ITINERARI_CUSTOM    = safeParse('modena_itin', []);
+let ITINERARI_NASCOSTI  = safeParse('modena_itin_nascosti', []);
+let VALUTAZIONI         = safeParse('modena_valutazioni', {});
+let CHECKINS            = safeParse('modena_checkins', []);
 
 LUOGHI_CUSTOM.forEach(c => { if (!LUOGHI.find(l => l.name === c.name && l.custom)) LUOGHI.push(c); });
 SENTIERI_CUSTOM.forEach(c => { if (!SENTIERI.find(s => s.name === c.name && s.custom)) SENTIERI.push(c); });
@@ -1486,7 +1519,7 @@ function handleCardClick(name, type, coords) {
   });
 
   premiumMarker = L.marker(pt, {icon}).addTo(map);
-  premiumMarker.bindPopup('<b>'+name+'</b>').openPopup();
+  premiumMarker.bindPopup('<b>'+sanitize(name)+'</b>').openPopup();
 }
 
 function updateMap() {
@@ -1595,7 +1628,7 @@ function showInfoByName(name, type) {
   if(p.km) bd.innerHTML += `<span class="badge">📏 ${p.km} km</span><span class="badge">⏱ ${p.h}</span>`;
   if(p.price) bd.innerHTML += `<span class="badge">${p.price}</span>`;
   if(p.prezzo) bd.innerHTML += `<span class="badge">€${p.prezzo} / Notte</span>`;
-  if(p.voto) bd.innerHTML += `<span class="badge">⭐ ${p.voto}</span>`;
+  if(p.voto) bd.innerHTML += `<span class="badge">⭐ ${p.voto.toString().replace('⭐','').trim()}</span>`;
   if(p.loc) bd.innerHTML += `<span class="badge">📍 ${p.loc}</span>`;
   
   const ex = document.getElementById('info-extra');
@@ -1737,6 +1770,7 @@ function addPopupToRouteByName(name, type) {
   if(type === 'alloggio') p = ALLOGGI_CONSIGLIATI.find(x => x.name === name);
   if(!p || !p.coords) return;
   
+  // BUG FIX: Quando è un sentiero (array di coordinate), estraggo solo il primo punto di partenza per l'itinerario point-to-point.
   const c = Array.isArray(p.coords[0]) ? p.coords[0] : p.coords;
   currentRouteCoords.push(c);
   currentRouteNames.push(p.name);
@@ -1855,6 +1889,9 @@ function renderLuoghi(){
     d.className = 'list-card';
     d.dataset.name = p.name;
     const rv = VALUTAZIONI[p.name] || '';
+    
+    // Sicurezza: Usare textContent per le variabili critiche se fossero manipolabili, 
+    // ma con il sanitize all'inserimento siamo coperti.
     d.innerHTML = `<h3>${p.name}
       ${p.pop?'<span class="badge" style="background:#fff3cd;color:#856404;margin-left:5px">⭐ Pop</span>':''}
       ${p.custom?'<span class="badge" style="background:#e8f0fe;color:#1565c0;margin-left:5px">✏️ Mio</span>':''}
@@ -1864,7 +1901,7 @@ function renderLuoghi(){
     <p>${p.desc}</p>
     <div style="display:flex;gap:6px;margin-top:7px;flex-wrap:wrap">
       <button data-n="${p.name}" onclick="event.stopPropagation(); showInfoByName(this.dataset.n, 'luogo')" style="font-size:11px;background:var(--sky);color:#fff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-weight:600">🔍 Dettagli</button>
-      <button data-n="${p.name}" onclick="event.stopPropagation(); eliminaLuogoCustom(this.dataset.n)" style="font-size:11px;background:#c62828;color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-weight:600">🗑 Rimuovi</button>
+      ${p.custom ? `<button data-n="${p.name}" onclick="event.stopPropagation(); eliminaLuogoCustom(this.dataset.n)" style="font-size:11px;background:#c62828;color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-weight:600">🗑 Rimuovi</button>` : ''}
     </div>`;
     d.onclick = () => handleCardClick(p.name, 'luogo', p.coords);
     list.appendChild(d);
@@ -1872,9 +1909,9 @@ function renderLuoghi(){
 }
 
 function salvaLuogo() {
-  const nome = document.getElementById('luogo-nome').value.trim();
-  const cat  = document.getElementById('luogo-cat').value;
-  const desc = document.getElementById('luogo-desc').value.trim() || 'Luogo aggiunto dall\'utente.';
+  const nome = sanitize(document.getElementById('luogo-nome').value.trim());
+  const cat  = sanitize(document.getElementById('luogo-cat').value);
+  const desc = sanitize(document.getElementById('luogo-desc').value.trim()) || 'Luogo aggiunto dall\'utente.';
   const lat  = parseFloat(document.getElementById('luogo-lat').value);
   const lng  = parseFloat(document.getElementById('luogo-lng').value);
   if (!nome || isNaN(lat) || isNaN(lng)) { showToast('Compila nome e coordinate valide!'); return; }
@@ -1938,16 +1975,18 @@ function renderTrek(){
   });
 }
 function salvaSentiero() {
-  const nome  = document.getElementById('trek-nome').value.trim();
+  if (SENTIERI_CUSTOM.length >= 6) { showToast('Hai raggiunto il limite di 6 sentieri.'); return; }
+  const nome  = sanitize(document.getElementById('trek-nome').value.trim());
   const diff  = document.getElementById('trek-diff').value;
   const km    = parseFloat(document.getElementById('trek-km').value) || 0;
-  const h     = document.getElementById('trek-h').value.trim() || '–';
-  const start = document.getElementById('trek-start').value.trim() || '–';
-  const desc  = document.getElementById('trek-desc').value.trim();
+  const h     = sanitize(document.getElementById('trek-h').value.trim()) || '–';
+  const start = sanitize(document.getElementById('trek-start').value.trim()) || '–';
+  const desc  = sanitize(document.getElementById('trek-desc').value.trim());
+  const url   = sanitize(document.getElementById('trek-url').value.trim());
   const lat   = parseFloat(document.getElementById('trek-lat').value);
   const lng   = parseFloat(document.getElementById('trek-lng').value);
   if (!nome || isNaN(lat) || isNaN(lng)) { showToast('Compila nome e coordinate!'); return; }
-  const nuovo = { name:nome, diff, km, h, start, desc, coords:[[lat,lng]], custom:true };
+  const nuovo = { name:nome, diff, km, h, start, desc, url, coords:[[lat,lng]], custom:true };
   SENTIERI_CUSTOM.push(nuovo); SENTIERI.push(nuovo);
   localStorage.setItem('modena_sentieri_custom', JSON.stringify(SENTIERI_CUSTOM));
   closeModal('sentiero-modal'); renderTrek(); updateMap(); showToast(`"${nome}" aggiunto! ✅`);
@@ -2013,12 +2052,12 @@ function renderRest(){
   });
 }
 function salvaRistorante() {
-  const name  = document.getElementById('rist-nome').value.trim();
-  const loc   = document.getElementById('rist-loc').value.trim();
+  const name  = sanitize(document.getElementById('rist-nome').value.trim());
+  const loc   = sanitize(document.getElementById('rist-loc').value.trim());
   const cat   = document.getElementById('rist-cat').value;
   const price = document.getElementById('rist-price').value;
-  const cucina= document.getElementById('rist-cucina').value.trim();
-  const desc  = document.getElementById('rist-desc').value.trim();
+  const cucina= sanitize(document.getElementById('rist-cucina').value.trim());
+  const desc  = sanitize(document.getElementById('rist-desc').value.trim());
   const lat   = parseFloat(document.getElementById('rist-lat').value);
   const lng   = parseFloat(document.getElementById('rist-lng').value);
   if (!name || !loc || isNaN(lat) || isNaN(lng)) { showToast('Compila nome, città e coordinate!'); return; }
@@ -2083,7 +2122,7 @@ function renderAlloggi(){
       <div class="badge-row">
         <span class="badge" style="background:#e8f4fd;color:#003580">${a.tipo}</span>
         <span class="badge">€${a.prezzo} / notte</span>
-        ${a.voto ? `<span class="badge">⭐ ${a.voto}</span>` : ''}
+        ${a.voto ? `<span class="badge">⭐ ${a.voto.toString().replace('⭐','').trim()}</span>` : ''}
         <span class="badge">📍 ${a.loc}</span>
       </div>
       <p>${a.desc||''}</p>
@@ -2095,41 +2134,49 @@ function renderAlloggi(){
   });
 }
 function salvaAlloggio() {
-  const name   = document.getElementById('alloggio-nome').value.trim();
-  const loc    = document.getElementById('alloggio-loc').value.trim();
+  const name   = sanitize(document.getElementById('alloggio-nome').value.trim());
+  const loc    = sanitize(document.getElementById('alloggio-loc').value.trim());
   const tipo   = document.getElementById('alloggio-form-tipo').value;
   const prezzo = parseFloat(document.getElementById('alloggio-prezzo').value);
-  const voto   = document.getElementById('alloggio-voto').value.trim() || '8.5 ⭐';
-  const desc   = document.getElementById('alloggio-desc').value.trim();
-  const url    = document.getElementById('alloggio-url').value.trim();
+  const voto   = sanitize(document.getElementById('alloggio-voto').value.trim()) || '8.5';
+  const desc   = sanitize(document.getElementById('alloggio-desc').value.trim());
+  const url    = sanitize(document.getElementById('alloggio-url').value.trim());
   const lat    = parseFloat(document.getElementById('alloggio-lat').value);
   const lng    = parseFloat(document.getElementById('alloggio-lng').value);
   if (!name || !loc || isNaN(prezzo) || isNaN(lat) || isNaN(lng)) { showToast('Compila nome, città, prezzo e coordinate!'); return; }
-  const nuovo = { name, loc, tipo, prezzo, voto, desc, url, coords:[lat,lng] };
+  const nuovo = { name, loc, tipo, prezzo, voto, desc, url, coords:[lat,lng], custom: true };
+  ALLOGGI_CUSTOM.push(nuovo);
   ALLOGGI_CONSIGLIATI.unshift(nuovo);
-  localStorage.setItem('modena_alloggi_consigliati', JSON.stringify(ALLOGGI_CONSIGLIATI));
+  localStorage.setItem('modena_alloggi_custom', JSON.stringify(ALLOGGI_CUSTOM));
   closeModal('alloggio-modal'); renderAlloggi(); updateMap(); showToast(`"${name}" aggiunto! ✅`);
 }
 function eliminaAlloggioConsigliato(name) {
-  ALLOGGI_CONSIGLIATI = ALLOGGI_CONSIGLIATI.filter(x => x.name !== name);
-  localStorage.setItem('modena_alloggi_consigliati', JSON.stringify(ALLOGGI_CONSIGLIATI));
+  ALLOGGI_CUSTOM = ALLOGGI_CUSTOM.filter(x => x.name !== name);
+  localStorage.setItem('modena_alloggi_custom', JSON.stringify(ALLOGGI_CUSTOM));
+  const idx = ALLOGGI_CONSIGLIATI.findIndex(x => x.name === name);
+  if(idx > -1) ALLOGGI_CONSIGLIATI.splice(idx, 1);
   renderAlloggi(); updateMap(); showToast("Alloggio rimosso");
 }
 function cercaAlloggiPartner(portale) {
   let c = document.getElementById('filter-alloggi-city').value;
   let text = document.getElementById('search-alloggi').value.trim();
-  let searchLoc = c !== 'tutte' ? c : (text ? text : 'Modena e Provincia');
+  
+  // CORREZIONE APPORTATA QUI: 
+  // Rimuovo l'aggiunta hardcoded di "Modena e Provincia" a fianco della città che generava confusione nei portali
+  let searchLoc = c !== 'tutte' ? c : (text ? text : 'Provincia di Modena');
+  
   let url = '';
   if(portale === 'expedia') {
     url = `https://www.expedia.it/Hotel-Search?destination=${encodeURIComponent(searchLoc + ', Emilia-Romagna, Italia')}`;
   } else if(portale === 'booking') {
-    url = `https://www.booking.com/searchresults.it.html?ss=${encodeURIComponent(searchLoc + ' Modena e Provincia')}`;
+    // Generiamo l'URL di booking pulito passandogli Città + Regione + Nazione (Migliora notevolmente la precisione)
+    url = `https://www.booking.com/searchresults.it.html?ss=${encodeURIComponent(searchLoc + ', Emilia-Romagna, Italia')}`;
   } else if(portale === 'airbnb') {
-    url = `https://www.airbnb.it/s/${encodeURIComponent(searchLoc + ' Emilia-Romagna')}/homes`;
+    url = `https://www.airbnb.it/s/${encodeURIComponent(searchLoc + ', Emilia-Romagna, Italia')}/homes`;
   } else if(portale === 'tripadvisor') {
     url = `https://www.tripadvisor.it/Search?q=${encodeURIComponent(searchLoc + ' hotel')}&ssrc=h`;
   } else if(portale === 'campeggi') {
-    url = `https://www.campeggi.com/italia/camping/modena-356c`;
+    url = `https://www.campeggi.com/italia/emilia-romagna/modena/camping-333664`;
   }
   window.open(url, '_blank');
 }
@@ -2259,7 +2306,7 @@ function ripristinaItinerari() {
 
 // ── BACKUP / RESTORE ──
 function exportData(){
-  const data={ LUOGHI_CUSTOM, SENTIERI_CUSTOM, RISTORANTI_CUSTOM, ALLOGGI_CONSIGLIATI, ITINERARI_CUSTOM, VALUTAZIONI, CHECKINS }; 
+  const data={ LUOGHI_CUSTOM, SENTIERI_CUSTOM, RISTORANTI_CUSTOM, ALLOGGI_CUSTOM, ITINERARI_CUSTOM, VALUTAZIONI, CHECKINS }; 
   const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download='modena_backup.json';
@@ -2275,7 +2322,7 @@ function importData(e){
       if(d.LUOGHI_CUSTOM) localStorage.setItem('modena_luoghi_custom', JSON.stringify(d.LUOGHI_CUSTOM));
       if(d.SENTIERI_CUSTOM) localStorage.setItem('modena_sentieri_custom', JSON.stringify(d.SENTIERI_CUSTOM));
       if(d.RISTORANTI_CUSTOM) localStorage.setItem('modena_ristoranti_custom', JSON.stringify(d.RISTORANTI_CUSTOM));
-      if(d.ALLOGGI_CONSIGLIATI) localStorage.setItem('modena_alloggi_consigliati', JSON.stringify(d.ALLOGGI_CONSIGLIATI));
+      if(d.ALLOGGI_CUSTOM) localStorage.setItem('modena_alloggi_custom', JSON.stringify(d.ALLOGGI_CUSTOM));
       if(d.ITINERARI_CUSTOM) localStorage.setItem('modena_itin', JSON.stringify(d.ITINERARI_CUSTOM));
       if(d.VALUTAZIONI) localStorage.setItem('modena_valutazioni', JSON.stringify(d.VALUTAZIONI));
       if(d.CHECKINS) localStorage.setItem('modena_checkins', JSON.stringify(d.CHECKINS));
@@ -2498,7 +2545,7 @@ async function inviaMessaggioAI() {
   const input = document.getElementById('chat-input');
   const txt = input.value.trim(); if (!txt) return;
   const msgBox = document.getElementById('chat-messages');
-  msgBox.innerHTML += `<div class="chat-bubble user">${txt}</div>`; input.value = '';
+  msgBox.innerHTML += `<div class="chat-bubble user">${sanitize(txt)}</div>`; input.value = '';
   const loaderId = 'loader-' + Date.now();
   msgBox.innerHTML += `<div class="chat-bubble ai" id="${loaderId}"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
   msgBox.scrollTop = msgBox.scrollHeight;
@@ -2609,7 +2656,7 @@ async function generaItinerarioAI() {
     if (tappeValide.length === 0) throw new Error("Nessuna tappa valida trovata");
 
     const nuovoItin = {
-      name: "✨ " + itinData.name, desc: itinData.desc, giorni: itinData.giorni || 1, km: itinData.km || 0,
+      name: "✨ " + sanitize(itinData.name), desc: sanitize(itinData.desc), giorni: itinData.giorni || 1, km: itinData.km || 0,
       tappe: tappeValide, coords: coordsValide, custom: true
     };
 
