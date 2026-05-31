@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="theme-color" content="#1a3a2e"/>
-<meta name="description" content="Piattaforma turistica delle Modena e Provincia – borghi, sentieri, ristoranti, eventi e itinerari nel cuore della Emilia-Romagna"/>
+<meta name="description" content="Piattaforma turistica di Modena e Provincia – borghi, sentieri, ristoranti, eventi e itinerari nel cuore della Emilia-Romagna"/>
 <title>Modena Premium – Piattaforma Turistica</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
@@ -52,7 +52,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--cream);c
 
 /* Sidebar */
 #sidebar{
-  width:360px;min-width:320px;background:var(--cream);border-right:1px solid var(--border);
+  width:360px;max-width:100%;min-width:0;background:var(--cream);border-right:1px solid var(--border);
   display:flex;flex-direction:column;overflow:hidden;
 }
 #tabs{display:flex;border-bottom:2px solid var(--border);background:#fff;overflow-x:auto;-webkit-overflow-scrolling:touch;}
@@ -397,9 +397,26 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--cream);c
 <div style="background:linear-gradient(135deg,#355c3a,#6c8c4a);color:#fff;
 border-radius:14px;padding:14px 16px;margin-bottom:14px;
 box-shadow:0 4px 14px rgba(0,0,0,.15)">
-  <div style="font-size:20px;font-weight:700;margin-bottom:6px">🏔 Terre di Modena</div>
+  <div style="font-size:20px;font-weight:700;margin-bottom:6px">🏛 Modena, Motori e Appennino</div>
   <div style="font-size:13px;line-height:1.5;opacity:.95">
     Città d'arte, motori, castelli, borghi storici, colline, Appennino modenese e tradizioni gastronomiche uniche.
+  </div>
+</div>
+
+
+<div style="background:#fff8e8;border:1px solid #f0d080;border-radius:14px;padding:12px;margin:12px 0">
+  <div style="font-weight:700;color:#1a3a2e;margin-bottom:8px">⭐ TOP 10 MODENA</div>
+  <div style="font-size:12px;line-height:1.7">
+    • Duomo di Modena<br>
+    • Ghirlandina<br>
+    • Ferrari Museum<br>
+    • Maranello<br>
+    • Aceto Balsamico Tradizionale<br>
+    • Nonantola<br>
+    • Vignola<br>
+    • Castelvetro<br>
+    • Sestola<br>
+    • Monte Cimone
   </div>
 </div>
 
@@ -407,27 +424,27 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
         <div class="count-label" id="count-luoghi"></div>
         <div id="montagna-banner" style="display:none;flex-direction:column;gap:8px;margin-bottom:10px">
           <div style="display:flex;gap:8px">
-            <a href="https://www.komoot.com/sentieri-modena-montagna-del-modena/" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.inappenninomodenese.com/" target="_blank" rel="noopener noreferrer"
               style="flex:1;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#023e8a,#0077b6);color:#fff;
                      border-radius:12px;padding:10px 12px;text-decoration:none;font-size:12px;font-weight:600">
-              <span style="font-size:18px">🏖</span>
-              <div><div>Guida Appennino Modenese</div><div style="font-size:10px;font-weight:400;opacity:.85">komoot.com</div></div>
+              <span style="font-size:18px">🏔</span>
+              <div><div>Guida Appennino Modenese</div><div style="font-size:10px;font-weight:400;opacity:.85">Google</div></div>
               <span style="margin-left:auto">↗</span>
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.inappenninomodenese.com/" target="_blank" rel="noopener noreferrer"
               style="flex:1;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0096c7,#48cae4);color:#fff;
                      border-radius:12px;padding:10px 12px;text-decoration:none;font-size:12px;font-weight:600">
-              <span style="font-size:18px">🌊</span>
+              <span style="font-size:18px">🏔</span>
               <div><div>Appennino Modenese</div><div style="font-size:10px;font-weight:400;opacity:.85">turismoModena.it</div></div>
               <span style="margin-left:auto">↗</span>
             </a>
           </div>
         </div>
         <div id="gastro-banner" style="display:none;flex-direction:column;gap:8px;margin-bottom:10px">
-          <div style="font-size:11px;font-weight:700;color:var(--stone);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">🍇 Prodotti tipici del Modena e Provincia</div>
+          <div style="font-size:11px;font-weight:700;color:var(--stone);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">🍇 Prodotti tipici di Modena e Provincia</div>
           <div style="display:flex;flex-wrap:wrap;gap:6px">
             <a href="https://www.itinerarinelgusto.it/sagre-e-feste/modena" target="_blank" style="flex:1;min-width:130px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#5d4037,#8d6e63);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🎪</span><div><div>Sagre e Feste</div><div style="opacity:.8;font-size:10px">itinerarinelgusto.it</div></div><span style="margin-left:auto">↗</span></a>
-            <a href="https://www.modenanatour.it/prodotti-tipici-del-modena/" target="_blank" style="flex:1;min-width:130px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#2e7d32,#558b2f);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🌿</span><div><div>Prodotti Tipici Modenesi</div><div style="opacity:.8;font-size:10px">modenanatour.it</div></div><span style="margin-left:auto">↗</span></a>
+            <a href="https://www.visitmodena.it/it/scopri-modena/eccellenze-gastronomiche/i-prodotti-tipici" target="_blank" style="flex:1;min-width:130px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#2e7d32,#558b2f);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🌿</span><div><div>Prodotti Tipici Modenesi</div><div style="opacity:.8;font-size:10px">modenanatour.it</div></div><span style="margin-left:auto">↗</span></a>
           </div>
           <div id="gastro-stagionale" style="background:#fffbf0;border:1px solid #f0d080;border-radius:10px;padding:10px;font-size:12px;line-height:1.6"></div>
         </div>
@@ -435,7 +452,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
           <div style="font-size:11px;font-weight:700;color:var(--stone);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">🌾 Agriturismi e Fattorie</div>
           <div style="display:flex;gap:8px">
             <a href="https://www.agriturismo.it/agriturismo/emilia-romagna/modena" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#33691e,#558b2f);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🌾</span><div><div>Agriturismo Modena e Provincia</div><div style="opacity:.8;font-size:10px">agriturismo.it</div></div><span style="margin-left:auto">↗</span></a>
-            <a href="https://www.booking.com/searchresults.it.html?ss=Modena e Provincia&nflt=property_type%3D220" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🏡</span><div><div>Prenota Masserie</div><div style="opacity:.8;font-size:10px">booking.com</div></div><span style="margin-left:auto">↗</span></a>
+            <a href="https://www.booking.com/searchresults.it.html?ss=Modena e Provincia&nflt=property_type%3D220" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🏡</span><div><div>Prenota Agriturismi</div><div style="opacity:.8;font-size:10px">booking.com</div></div><span style="margin-left:auto">↗</span></a>
           </div>
         </div>
         <div id="list-luoghi"></div>
@@ -462,7 +479,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
               <span style="font-size:18px">🥾</span>
               <div>
                 <div>Guida Trekking Appennino Modenese</div>
-                <div style="font-size:10px;font-weight:400;opacity:.85">komoot.com</div>
+                <div style="font-size:10px;font-weight:400;opacity:.85">Google</div>
               </div>
               <span style="margin-left:auto">↗</span>
             </a>
@@ -493,8 +510,8 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
                      border-radius:12px;padding:10px 12px;text-decoration:none;font-size:12px;font-weight:600">
               <span style="font-size:18px">🚴</span>
               <div>
-                <div>Tour in E-Bike</div>
-                <div style="font-size:10px;font-weight:400;opacity:.85">komoot.com</div>
+                <div>Noleggio Bici</div>
+                <div style="font-size:10px;font-weight:400;opacity:.85">Google</div>
               </div>
               <span style="margin-left:auto">↗</span>
             </a>
@@ -651,25 +668,25 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
   <div class="section-title">📅 Eventi, Sagre e Manifestazioni</div>
   <div id="eventi-links" style="display:flex;flex-direction:column;gap:8px">
 
-    <a href="https://www.visitmodena.it/it/eventi/" target="_blank" class="list-card"><h3>🌐 VisitModena – Calendario eventi ufficiale</h3><p>Portale turistico ufficiale di Modena con il calendario completo di mostre, sagre ed eventi.</p></a>
+    <a href="https://www.visitmodena.it/it/eventi/" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🌐 VisitModena – Calendario eventi ufficiale</h3><p>Portale turistico ufficiale di Modena con il calendario completo di mostre, sagre ed eventi.</p></a>
 
-    <a href="https://www.modenatoday.it/eventi/" target="_blank" class="list-card"><h3>📰 ModenaToday – Tutti gli eventi</h3><p>Calendario aggiornato di eventi, concerti, fiere e manifestazioni a Modena e provincia.</p></a>
+    <a href="https://www.modenatoday.it/eventi/" target="_blank" rel="noopener noreferrer" class="list-card"><h3>📰 ModenaToday – Tutti gli eventi</h3><p>Calendario aggiornato di eventi, concerti, fiere e manifestazioni a Modena e provincia.</p></a>
 
-    <a href="https://www.terredicastelli.eu/eventi-e-sagre-appennino-modenese/" target="_blank" class="list-card"><h3>🎉 Terre di Castelli – Sagre e eventi</h3><p>Sagre, feste e manifestazioni nell'Appennino modenese e nelle Terre di Castelli.</p></a>
+    <a href="https://www.terredicastelli.eu/eventi-e-sagre-appennino-modenese/" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🎉 Terre di Castelli – Sagre e eventi</h3><p>Sagre, feste e manifestazioni nell'Appennino modenese e nelle Terre di Castelli.</p></a>
 
-    <a href="https://www.comune.modena.it/argomenti/cultura" target="_blank" class="list-card"><h3>🏛 Comune di Modena – Agenda</h3><p>Agenda ufficiale del Comune di Modena: teatro, musica, mostre e attività culturali.</p></a>
+    <a href="https://www.comune.modena.it/argomenti/cultura" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🏛 Comune di Modena – Agenda</h3><p>Agenda ufficiale del Comune di Modena: teatro, musica, mostre e attività culturali.</p></a>
 
-    <a href="https://www.itinerarinelgusto.it/sagre-e-feste/modena" target="_blank" class="list-card"><h3>🍽 Itinerari nel Gusto – Sagre Modena</h3><p>Calendario di sagre gastronomiche in provincia: borlengo, lambrusco, ciliegie e zampone.</p></a>
+    <a href="https://www.itinerarinelgusto.it/sagre-e-feste/modena" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🍽 Itinerari nel Gusto – Sagre Modena</h3><p>Calendario di sagre gastronomiche in provincia: borlengo, lambrusco, ciliegie e zampone.</p></a>
 
-    <a href="https://www.sciocola.it" target="_blank" class="list-card"><h3>🍫 Sciocolà – Festival del Cioccolato</h3><p>Festival del cioccolato nel centro storico di Modena.</p></a>
+    <a href="https://www.sciocola.it" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🍫 Sciocolà – Festival del Cioccolato</h3><p>Festival del cioccolato nel centro storico di Modena.</p></a>
 
-    <a href="https://www.motorvalleyfest.com" target="_blank" class="list-card"><h3>🏎 Motor Valley Fest</h3><p>Festival della Motor Valley con Ferrari, Lamborghini e Maserati.</p></a>
+    <a href="https://www.motorvalley.it/motorvalleyfest/" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🏎 Motor Valley Fest</h3><p>Festival della Motor Valley con Ferrari, Lamborghini e Maserati.</p></a>
 
-    <a href="https://www.teatrocomunalemodena.it" target="_blank" class="list-card"><h3>🎭 Teatro Comunale Pavarotti-Freni</h3><p>Stagione lirica, sinfonica e di prosa del principale teatro cittadino.</p></a>
+    <a href="https://www.teatrocomunalemodena.it" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🎭 Teatro Comunale Pavarotti-Freni</h3><p>Stagione lirica, sinfonica e di prosa del principale teatro cittadino.</p></a>
 
-    <a href="https://viviappennino.com/abt-festival/" target="_blank" class="list-card"><h3>🚴 Appennino Bike Tour – MTB</h3><p>Gare ed eventi di mountain bike e outdoor nell'Appennino modenese.</p></a>
+    <a href="https://www.inappenninomodenese.com/" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🚴 Appennino Bike Tour – MTB</h3><p>Gare ed eventi di mountain bike e outdoor nell'Appennino modenese.</p></a>
 
-    <a href="https://www.facebook.com/search/events/?q=modena+eventi" target="_blank" class="list-card"><h3>📱 Facebook – Eventi Modena</h3><p>Ricerca eventi, concerti, feste e sagre a Modena e provincia.</p></a>
+    <a href="https://www.facebook.com/search/events/?q=modena+eventi" target="_blank" rel="noopener noreferrer" class="list-card"><h3>📱 Facebook – Eventi Modena</h3><p>Ricerca eventi, concerti, feste e sagre a Modena e provincia.</p></a>
 
   </div>
 </div>
@@ -804,7 +821,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
       </div>
       <div class="form-row" style="flex:1;margin-bottom:0">
         <label>Cucina</label>
-        <input type="text" id="rist-cucina" placeholder="Es. Emilia-Romagnana"/>
+        <input type="text" id="rist-cucina" placeholder="Es. Emiliano-Romagnola"/>
       </div>
     </div>
     <div class="form-row" style="margin-top:10px">
@@ -948,7 +965,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
     <h2>🏨 Aggiungi alloggio consigliato</h2>
     <div class="form-row">
       <label>Nome alloggio *</label>
-      <input type="text" id="alloggio-nome" placeholder="Es. B&B Modena e Provincia Vista"/>
+      <input type="text" id="alloggio-nome" placeholder="Es. Hotel Estense"/>
     </div>
     <div style="display:flex;gap:8px">
       <div class="form-row" style="flex:1;margin-bottom:0">
@@ -1178,7 +1195,7 @@ const LUOGHI = [
 {name:"Foresta di Serramazzoni",cat:"natura",coords:[44.4200,10.8900],desc:"Bosco di castagni e cerri nell'Appennino modenese, con sentieri per escursioni in famiglia.",pop:false},
 {name:"Forra del Dardagna",cat:"natura",coords:[44.2300,10.8100],desc:"Cascate del Dardagna: serie di salti d'acqua spettacolari nel Parco Regionale dei Laghi di Suviana.",pop:false},
 {name:"Monte Rondinaio",cat:"natura",coords:[44.1900,10.6800],desc:"Cima appenninica a 1964 m con vista sull'Appennino tosco-emiliano e sentieri impegnativi.",pop:false},
-{name:"Monte Libro Aperto",cat:"natura",coords:[44.1790,10.7500],desc:"Caratteristica dorsale appenninica a 1935 m, cosiddetta per il profilo a libro aperto visto dal basso.",pop:false},
+{name:"Capanno Tassoni - Libro Aperto",cat:"natura",coords:[44.1790,10.7500],desc:"Caratteristica dorsale appenninica a 1935 m, cosiddetta per il profilo a libro aperto visto dal basso.",pop:false},
 {name:"Torrente Leo – Gorgo del Cane",cat:"natura",coords:[44.5300,10.9700],desc:"Pozze naturali e piccole cascate sul torrente collinare, ideali per rinfrescarsi d'estate.",pop:false},
 
 // ── GASTRONOMIA ──
@@ -1239,35 +1256,35 @@ const LUOGHI = [
 const SENTIERI = [
 {name:"Monte Cimone via Lago della Ninfa",diff:"D",km:9.2,h:"4.5-5h",start:"Rifugio Ninfa – Pian Cavallaro",
  coords:[[44.2100,10.7200],[44.1960,10.6993]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/lago-della-ninfa-monte-cimone",
+ url:"https://www.alltrails.com/it-it/sentiero/italy/emilia-romagna/lago-della-ninfa-monte-cimone",
  desc:"Dal Rifugio Ninfa alla vetta del Cimone (2165 m), la cima più alta dell'Appennino tosco-emiliano. Panorama straordinario."},
 {name:"Lago Santo Modenese – Anello",diff:"F",km:5,h:"2-2.5h",start:"Rifugio Giovo",
  coords:[[44.1850,10.7210],[44.1960,10.6993]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/lago-santo-e-lago-baccio",
+ url:"https://www.alltrails.com/trail/italy/emilia-romagna/lago-santo-modenese",
  desc:"Anello attorno al suggestivo lago glaciale a 1501 m, tra faggi e abeti. Adatto alle famiglie."},
 {name:"Cascate di Sant'Annapelago",diff:"F",km:9.8,h:"3-4h",start:"Sant'Annapelago",
  coords:[[44.2300,10.8100],[44.2200,10.8200]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/sentiero-cascate-santannapelago",
+ url:"https://www.alltrails.com/it-it/sentiero/italy/emilia-romagna/sentiero-cascate-sant-annapelago",
  desc:"Percorso piacevole lungo il Rio Valdarno e il Fosso del Terzino fino alle cinque cascate di Sant'Anna Pelago."},
 {name:"Lago Scaffaiolo – Cascate del Dardagna via Cavone",diff:"D",km:18,h:"7-8h",start:"Lago del Cavone",
  coords:[[44.2300,10.8100],[44.2200,10.8200]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/lago-scaffaiolo-cascate-del-dardagna-via-cavone",
+ url:"https://www.alltrails.com/it-it/sentiero/italy/emilia-romagna/lago-cavone-lago-scaffaiolo-cascata-dardagna",
  desc:"Dalla Valle del Cavone al Corno alle Scale (1944 m) e Lago Scaffaiolo, discesa lungo le stupende Cascate del Dardagna."},
 {name:"Monte Rondinaio via Ospedaletto",diff:"D",km:14,h:"5-6h",start:"Ospedaletto",
  coords:[[44.2000,10.6217],[44.1900,10.6800]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/monte-rondinaio-via-ospedaletto",
+ url:"https://www.alltrails.com/it-it/sentiero/italy/emilia-romagna/ospedaletto-monte-rondinaio-lago-baccio",
  desc:"Salita al Monte Rondinaio (1963 m) passando per Lago Baccio. Vista su Alpi Apuane e Appennino."},
-{name:"Monte Libro Aperto",diff:"M",km:9,h:"3.5-4h",start:"Le Tagliate",
+{name:"Capanno Tassoni - Libro Aperto",diff:"M",km:9,h:"3.5-4h",start:"Le Tagliate",
  coords:[[44.1900,10.7800],[44.1790,10.7500]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/monte-libro-aperto",
+ url:"https://www.alltrails.com/it-it/sentiero/italy/emilia-romagna/capanno-tassoni-libro-aperto",
  desc:"Sentiero lungo la caratteristica dorsale del Libro Aperto (1935 m) con viste su entrambi i versanti appenninici."},
 {name:"Sentiero delle Salse di Nirano",diff:"F",km:4,h:"1.5-2h",start:"Parco delle Salse",
  coords:[[44.5652,10.7952],[44.5700,10.7900]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/riserva-naturale-delle-salse-di-nirano",
+ url:"https://www.alltrails.com/it-it/parchi/italy/emilia-romagna/riserva-naturale-delle-salse-di-nirano",
  desc:"Percorso naturalistico tra i vulcani di fango attivi della Riserva Naturale di Nirano. Unico al mondo."},
 {name:"Colline del Lambrusco – Castelvetro",diff:"F",km:6,h:"2-2.5h",start:"Castelvetro",
  coords:[[44.5022,10.9492],[44.4800,10.9600]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/strada-del-lambrusco-castelvetro",
+ url:"https://www.alltrails.com/it-it/italy/emilia-romagna/castelvetro-di-modena",
  desc:"Passeggiata tra i vigneti del Lambrusco Grasparossa sulle colline di Castelvetro con vista sul borgo medievale."},
 {name:"Pietra di Bismantova",diff:"M",km:5,h:"2-2.5h",start:"Pietra di Bismantova (RE)",
  coords:[[44.4200,10.5900],[44.4200,10.5900]],
@@ -1275,15 +1292,12 @@ const SENTIERI = [
  desc:"Salita all'imponente monolite calcareo (1047 m) nel reggiano, citata da Dante. Pareti celebri per l'arrampicata."},
 {name:"Capanne Celtiche – Monte Cimone ad anello",diff:"M",km:12,h:"4-5h",start:"Doccia – Fanano",
  coords:[[44.2080,10.7979],[44.1960,10.6993]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/capanne-celtiche-monte-cimone",
+ url:"https://www.alltrails.com/trail/italy/emilia-romagna/monte-cimone-via-capanne-celtiche",
  desc:"Da Fanano tra i misteriosi edifici rurali a gradoni in pietra (Capanne Celtiche) fino alla vetta del Cimone."},
-{name:"Via degli Dei – tratto modenese",diff:"M",km:22,h:"7-8h",start:"Montovolo (BO)",
- coords:[[44.1900,11.1500],[44.1900,11.2000]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/via-degli-dei-bologna-firenze",
- desc:"Storica via di pellegrinaggio Bologna–Firenze. Il tratto appenninico offre panorami sugli Appennini tosco-emiliani."},
-{name:"Cima Tauffi – Crinale Cimone",diff:"E",km:35,h:"10-12h",start:"Cimoncino – Fanano",
+
+{name:"I migliori sentieri vicino a Cima Tauffi",diff:"E",km:35,h:"10-12h",start:"Cimoncino – Fanano",
  coords:[[44.2080,10.7979],[44.1960,10.6993]],
- url:"https://www.alltrails.com/trail/italy/emilia-romagna/cima-tauffi-light-trail-35km",
+ url:"https://www.alltrails.com/it-it/poi/italy/emilia-romagna/cima-tauffi",
  desc:"Percorso di trail running/trekking lungo il crinale tosco-emiliano con salita al Monte Cimone (2165 m)."}
 ];
 
