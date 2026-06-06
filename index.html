@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
 <style>
 :root{
@@ -216,7 +216,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--cream);c
   #sidebar.open{transform:translateX(0)}
   #map{width:100%}
   #stats-bar{left:0;font-size:11px;padding:6px 10px;bottom:0;}
-  #info-panel{left:0;bottom:28px;}
+  #info-panel{left:0;bottom:32px;}
   #main{flex-direction:column}
   #map-container{height:calc(100vh - 58px)}
   .mob-toggle{display:flex!important}
@@ -393,6 +393,7 @@ input:checked + .slider:before { transform: translateX(18px); }
     <button class="hdr-btn" onclick="locateUser()" aria-label="Trova la mia posizione" title="Trova la mia posizione">📍 <span class="txt-hide-mob">Posizione</span></button>
     <button class="hdr-btn hide-mobile" onclick="fitAll()" aria-label="Mostra tutti i punti sulla mappa" title="Mostra tutti i punti">🗺 Tutto</button>
     <button class="hdr-btn hide-mobile" onclick="clearRoute()" aria-label="Cancella percorso tracciato" title="Ripristina percorso">↺ Reset</button>
+    <button class="hdr-btn" onclick="apriImpostazioni()" aria-label="Impostazioni e API Key" title="Impostazioni, API Key Gemini e dati" style="background:#37474f;border-color:#37474f">⚙️ <span class="txt-hide-mob">Impostazioni</span></button>
   </div>
 </header>
 
@@ -425,57 +426,10 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
 </div>
 
 
-<div style="background:#fff8e8;border:1px solid #f0d080;border-radius:14px;padding:12px;margin:12px 0">
-  <div style="font-weight:700;color:#1a3a2e;margin-bottom:8px">⭐ TOP 10 MODENA</div>
-  <div style="font-size:12px;line-height:1.7">
-    • Duomo di Modena<br>
-    • Ghirlandina<br>
-    • Ferrari Museum<br>
-    • Maranello<br>
-    • Aceto Balsamico Tradizionale<br>
-    • Nonantola<br>
-    • Vignola<br>
-    • Castelvetro<br>
-    • Sestola<br>
-    • Monte Cimone
-  </div>
-</div>
+
 
 <div class="section-title" style="margin-top:12px">Luoghi turistici di Modena e Provincia</div>
         <div class="count-label" id="count-luoghi"></div>
-        <div id="montagna-banner" style="display:none;flex-direction:column;gap:8px;margin-bottom:10px">
-          <div style="display:flex;gap:8px">
-            <a href="https://www.inappenninomodenese.com/" target="_blank" rel="noopener noreferrer"
-              style="flex:1;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#023e8a,#0077b6);color:#fff;
-                     border-radius:12px;padding:10px 12px;text-decoration:none;font-size:12px;font-weight:600">
-              <span style="font-size:18px">🏔</span>
-              <div><div>Guida Appennino Modenese</div><div style="font-size:10px;font-weight:400;opacity:.85">Google</div></div>
-              <span style="margin-left:auto">↗</span>
-            </a>
-            <a href="https://www.inappenninomodenese.com/" target="_blank" rel="noopener noreferrer"
-              style="flex:1;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0096c7,#48cae4);color:#fff;
-                     border-radius:12px;padding:10px 12px;text-decoration:none;font-size:12px;font-weight:600">
-              <span style="font-size:18px">🏔</span>
-              <div><div>Appennino Modenese</div><div style="font-size:10px;font-weight:400;opacity:.85">turismoModena.it</div></div>
-              <span style="margin-left:auto">↗</span>
-            </a>
-          </div>
-        </div>
-        <div id="gastro-banner" style="display:none;flex-direction:column;gap:8px;margin-bottom:10px">
-          <div style="font-size:11px;font-weight:700;color:var(--stone);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">🍇 Prodotti tipici di Modena e Provincia</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px">
-            <a href="https://www.itinerarinelgusto.it/sagre-e-feste/modena" target="_blank" style="flex:1;min-width:130px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#5d4037,#8d6e63);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🎪</span><div><div>Sagre e Feste</div><div style="opacity:.8;font-size:10px">itinerarinelgusto.it</div></div><span style="margin-left:auto">↗</span></a>
-            <a href="https://www.visitmodena.it/it/scopri-modena/eccellenze-gastronomiche/i-prodotti-tipici" target="_blank" style="flex:1;min-width:130px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#2e7d32,#558b2f);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🌿</span><div><div>Prodotti Tipici Modenesi</div><div style="opacity:.8;font-size:10px">modenanatour.it</div></div><span style="margin-left:auto">↗</span></a>
-          </div>
-          <div id="gastro-stagionale" style="background:#fffbf0;border:1px solid #f0d080;border-radius:10px;padding:10px;font-size:12px;line-height:1.6"></div>
-        </div>
-        <div id="agriturismo-banner" style="display:none;flex-direction:column;gap:8px;margin-bottom:10px">
-          <div style="font-size:11px;font-weight:700;color:var(--stone);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">🌾 Agriturismi e Fattorie</div>
-          <div style="display:flex;gap:8px">
-            <a href="https://www.agriturismo.it/agriturismo/emilia-romagna/modena" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#33691e,#558b2f);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🌾</span><div><div>Agriturismo Modena e Provincia</div><div style="opacity:.8;font-size:10px">agriturismo.it</div></div><span style="margin-left:auto">↗</span></a>
-            <a href="https://www.booking.com/searchresults.it.html?ss=Provincia+di+Modena%2C+Italia&nflt=property_type%3D220" target="_blank" style="flex:1;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border-radius:10px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:600"><span>🏡</span><div><div>Prenota Agriturismi</div><div style="opacity:.8;font-size:10px">booking.com</div></div><span style="margin-left:auto">↗</span></a>
-          </div>
-        </div>
         <div id="list-luoghi"></div>
         <div id="vicini-a-me"></div>
       </div>
@@ -504,7 +458,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
               </div>
               <span style="margin-left:auto">↗</span>
             </a>
-            <a href="https://www.alltrails.com/it-it/italy/emilia-romagna/modena?utm_medium=sem&utm_source=google&utm_sub=text&utm_campaign=23866254218&utm_term=escursioni%20vicino%20a%20me&utm_device=c&gad_source=1&gad_campaignid=23866254218&gbraid=0AAAAAD4bpD9HYwKNUTjMwZCsujU2_7mSl&gclid=Cj0KCQjwlerQBhDMARIsAB16H-V7MdHTo_cW6XGAp1erHq0w8O1Cqcs3ptM65DPtc3l3up8Gd0t0mrQaAgD8EALw_wcB" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.alltrails.com/it-it/italy/emilia-romagna/modena" target="_blank" rel="noopener noreferrer"
               style="flex:1;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00622a,#00b562);color:#fff;
                      border-radius:12px;padding:10px 12px;text-decoration:none;font-size:12px;font-weight:600">
               <span style="font-size:18px">🗺</span>
@@ -687,6 +641,9 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
       
 <div class="panel" id="panel-eventi">
   <div class="section-title">📅 Eventi, Sagre e Manifestazioni</div>
+  <div id="eventi-date-label" style="font-size:11px;color:var(--muted);margin-bottom:8px"></div>
+  <div id="ricerca-eventi-rapida" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
+  <div id="social-eventi" style="margin-bottom:12px"></div>
   <div id="eventi-links" style="display:flex;flex-direction:column;gap:8px">
 
     <a href="https://www.visitmodena.it/it/eventi/" target="_blank" rel="noopener noreferrer" class="list-card"><h3>🌐 VisitModena – Calendario eventi ufficiale</h3><p>Portale turistico ufficiale di Modena con il calendario completo di mostre, sagre ed eventi.</p></a>
@@ -731,6 +688,8 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
             <option value="gastronomico">Gastronomico</option>
             <option value="trekking">Trekking & Sport</option>
             <option value="borghi">Borghi e castelli</option>
+            <option value="motori">Motor Valley</option>
+            <option value="famiglia">Famiglia con bambini</option>
           </select>
         </div>
         <div class="form-row">
@@ -812,6 +771,19 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
 <div class="modal-overlay" id="ristorante-modal">
   <div class="modal-box">
     <h2>🍽 Aggiungi ristorante</h2>
+    <div style="background:#e8f4fd;border:1px solid #90caf9;border-radius:10px;padding:10px 12px;margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#1565c0;display:block;margin-bottom:6px">🪄 Importa da Google Maps (o testo)</label>
+      <div style="display:flex;gap:6px">
+        <input type="text" id="rist-gmaps-url" placeholder="Incolla link Maps, nome del posto o testo…"
+          style="flex:1;padding:7px 10px;border:1px solid #90caf9;border-radius:8px;font-size:12px;outline:none"/>
+        <button type="button" onclick="importaDaGMapsAI('rist')"
+          style="background:#1565c0;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Importa</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
+        <div id="rist-gmaps-msg" style="font-size:11px;min-height:14px"></div>
+        <a href="https://www.google.com/maps/search/Modena" target="_blank" rel="noopener noreferrer" id="rist-gmaps-open" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#1565c0;text-decoration:none;font-weight:600;white-space:nowrap">🗺 Apri Google Maps</a>
+      </div>
+    </div>
     <div class="form-row">
       <label>Nome *</label>
       <input type="text" id="rist-nome" placeholder="Es. Trattoria da Luigi"/>
@@ -873,6 +845,19 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
 <div class="modal-overlay" id="sentiero-modal">
   <div class="modal-box">
     <h2>🥾 Aggiungi sentiero</h2>
+    <div style="background:#e8f4fd;border:1px solid #90caf9;border-radius:10px;padding:10px 12px;margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#1565c0;display:block;margin-bottom:6px">🪄 Importa da Google Maps (o testo)</label>
+      <div style="display:flex;gap:6px">
+        <input type="text" id="trek-gmaps-url" placeholder="Incolla link Maps, nome del posto o testo…"
+          style="flex:1;padding:7px 10px;border:1px solid #90caf9;border-radius:8px;font-size:12px;outline:none"/>
+        <button type="button" onclick="importaDaGMapsAI('trek')"
+          style="background:#1565c0;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Importa</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
+        <div id="trek-gmaps-msg" style="font-size:11px;min-height:14px"></div>
+        <a href="https://www.google.com/maps/search/Modena" target="_blank" rel="noopener noreferrer" id="trek-gmaps-open" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#1565c0;text-decoration:none;font-weight:600;white-space:nowrap">🗺 Apri Google Maps</a>
+      </div>
+    </div>
     <p id="sentiero-limit-msg" style="font-size:12px;color:var(--rust);margin-bottom:8px;display:none;padding:8px;background:#fce4ec;border-radius:8px;">
       ⚠️ Hai raggiunto il limite di 6 sentieri personalizzati.
     </p>
@@ -937,6 +922,19 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
 <div class="modal-overlay" id="luogo-modal">
   <div class="modal-box">
     <h2>📍 Aggiungi luogo</h2>
+    <div style="background:#e8f4fd;border:1px solid #90caf9;border-radius:10px;padding:10px 12px;margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#1565c0;display:block;margin-bottom:6px">🪄 Importa da Google Maps (o testo)</label>
+      <div style="display:flex;gap:6px">
+        <input type="text" id="luogo-gmaps-url" placeholder="Incolla link Maps, nome del posto o testo…"
+          style="flex:1;padding:7px 10px;border:1px solid #90caf9;border-radius:8px;font-size:12px;outline:none"/>
+        <button type="button" onclick="importaDaGMapsAI('luogo')"
+          style="background:#1565c0;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Importa</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
+        <div id="luogo-gmaps-msg" style="font-size:11px;min-height:14px"></div>
+        <a href="https://www.google.com/maps/search/Modena" target="_blank" rel="noopener noreferrer" id="luogo-gmaps-open" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#1565c0;text-decoration:none;font-weight:600;white-space:nowrap">🗺 Apri Google Maps</a>
+      </div>
+    </div>
     <div class="form-row">
       <label>Nome *</label>
       <input type="text" id="luogo-nome" placeholder="Es. Santuario di Nonantola"/>
@@ -984,6 +982,19 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
 <div class="modal-overlay" id="alloggio-modal">
   <div class="modal-box">
     <h2>🏨 Aggiungi alloggio consigliato</h2>
+    <div style="background:#e8f4fd;border:1px solid #90caf9;border-radius:10px;padding:10px 12px;margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#1565c0;display:block;margin-bottom:6px">🪄 Importa da Google Maps (o testo)</label>
+      <div style="display:flex;gap:6px">
+        <input type="text" id="alloggio-gmaps-url" placeholder="Incolla link Maps, nome del posto o testo…"
+          style="flex:1;padding:7px 10px;border:1px solid #90caf9;border-radius:8px;font-size:12px;outline:none"/>
+        <button type="button" onclick="importaDaGMapsAI('alloggio')"
+          style="background:#1565c0;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Importa</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px">
+        <div id="alloggio-gmaps-msg" style="font-size:11px;min-height:14px"></div>
+        <a href="https://www.google.com/maps/search/Modena" target="_blank" rel="noopener noreferrer" id="alloggio-gmaps-open" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#1565c0;text-decoration:none;font-weight:600;white-space:nowrap">🗺 Apri Google Maps</a>
+      </div>
+    </div>
     <div class="form-row">
       <label>Nome alloggio *</label>
       <input type="text" id="alloggio-nome" placeholder="Es. Hotel Estense"/>
@@ -1048,8 +1059,23 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
     
     <div style="background:#fff7e8;border:1px solid #f0d18a;border-radius:10px;padding:12px;margin-bottom:16px">
       <h4 style="font-size:14px;color:var(--rust);margin-bottom:6px">🤖 Intelligenza Artificiale</h4>
-      <p style="font-size:12px;color:#555;margin-bottom:8px">Rimuovi la chiave Gemini se vuoi cambiarla o disattivare temporaneamente l'AI.</p>
-      <button class="btn btn-outline" onclick="rimuoviApiKey()" style="font-size:12px;width:100%;border-color:var(--rust);color:var(--rust)">Rimuovi API Key salvata</button>
+      <p style="font-size:12px;color:#555;margin-bottom:8px">Modello Gemini da usare per le funzioni AI:</p>
+      <select id="select-gemini-model" onchange="salvaModelloGemini(this.value)"
+        style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;margin-bottom:8px;background:#fff">
+        <option value="gemini-2.5-flash">gemini-2.5-flash (predefinito)</option>
+        <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+        <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+        <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+      </select>
+      <p style="font-size:12px;color:#555;margin-bottom:4px">API Key Gemini:</p>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <input type="password" id="settings-api-key" placeholder="Incolla qui la tua AIza…"
+          style="flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;outline:none"/>
+        <button onclick="salvaDirettaApiKey()" style="background:var(--forest);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer">Salva</button>
+      </div>
+      <p style="font-size:11px;color:#888;margin-bottom:8px">Non hai la chiave? <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:#1565c0;font-weight:600">Ottienila gratis su Google AI Studio →</a></p>
+      <p style="font-size:12px;color:#555;margin-bottom:8px">Rimuovi la chiave Gemini se vuoi cambiarla o disattivare l'AI.</p>
+      <button class="btn btn-outline" onclick="rimuoviApiKey()" style="font-size:12px;width:100%;border-color:var(--rust);color:var(--rust)">🔑 Rimuovi API Key salvata</button>
     </div>
 
     <div style="background:#fce4ec;border:1px solid #f8bbd0;border-radius:10px;padding:12px;margin-bottom:10px">
@@ -1092,13 +1118,64 @@ function sanitize(str) {
   }[tag]));
 }
 
-function safeParse(key, defaultValue) {
-  try {
-    const val = localStorage.getItem(key);
-    return val ? JSON.parse(val) : defaultValue;
-  } catch (e) {
-    return defaultValue;
-  }
+// ═══════════════════════════════════════════════════════════
+// LAYER INDEXEDDB — sostituisce localStorage per i dati app
+// ═══════════════════════════════════════════════════════════
+const IDB_NAME = 'modena_db';
+const IDB_STORE = 'kv';
+const IDB_VER = 1;
+let _idb = null;
+
+function openIDB() {
+  if (_idb) return Promise.resolve(_idb);
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(IDB_NAME, IDB_VER);
+    req.onupgradeneeded = e => e.target.result.createObjectStore(IDB_STORE);
+    req.onsuccess = e => { _idb = e.target.result; res(_idb); };
+    req.onerror = e => rej(e.target.error);
+  });
+}
+async function idbGet(key) {
+  const db = await openIDB();
+  return new Promise((res, rej) => {
+    const req = db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).get(key);
+    req.onsuccess = () => res(req.result ?? null);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+async function idbSet(key, value) {
+  const db = await openIDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).put(value, key);
+    tx.oncomplete = () => res();
+    tx.onerror = e => rej(e.target.error);
+  });
+}
+async function idbDelete(key) {
+  const db = await openIDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).delete(key);
+    tx.oncomplete = () => res();
+    tx.onerror = e => rej(e.target.error);
+  });
+}
+async function idbKeys() {
+  const db = await openIDB();
+  return new Promise((res, rej) => {
+    const req = db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).getAllKeys();
+    req.onsuccess = () => res(req.result);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+
+async function safeParse(key, defaultValue) {
+  try { const val = await idbGet(key); return val !== null ? val : defaultValue; }
+  catch (e) { return defaultValue; }
+}
+async function saveData(key, value) {
+  try { await idbSet(key, value); } catch(e) { console.error('IDB saveData error', e); }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1118,14 +1195,161 @@ function closeInfo(){
   document.getElementById('chat-widget').style.display='flex';
 }
 
+// ═══════════════════════════════════════════════════════════
+// IMPORTA DA GOOGLE MAPS
+// ═══════════════════════════════════════════════════════════
+function aggiornaLinkGMaps(prefix, nomeId) {
+  const nomeEl = document.getElementById(nomeId);
+  const linkEl = document.getElementById(`${prefix}-gmaps-open`);
+  if (!nomeEl || !linkEl) return;
+  nomeEl.addEventListener('input', () => {
+    const q = nomeEl.value.trim();
+    linkEl.href = q
+      ? `https://www.google.com/maps/search/${encodeURIComponent(q + ' Modena')}`
+      : 'https://www.google.com/maps/search/Modena';
+  });
+}
+
+// ── Mappa campi per ogni modal ──
+const GMAPS_FIELDS = {
+  luogo:   { nome:'luogo-nome',    lat:'luogo-lat',    lng:'luogo-lng',    desc:'luogo-desc',    cat:'luogo-cat' },
+  rist:    { nome:'rist-nome',     lat:'rist-lat',     lng:'rist-lng',     desc:'rist-desc',     cat:'rist-cat',  loc:'rist-loc', cucina:'rist-cucina' },
+  trek:    { nome:'trek-nome',     lat:'trek-lat',     lng:'trek-lng',     desc:'trek-desc',     start:'trek-start' },
+  alloggio:{ nome:'alloggio-nome', lat:'alloggio-lat', lng:'alloggio-lng', desc:'alloggio-desc', loc:'alloggio-loc', url:'alloggio-url' },
+};
+
+const GMAPS_CATEGORIE = {
+  luogo:   'borgo, cultura, natura, montagna, religioso, sport, gastronomia, scienza, artigianato, agriturismo, motori',
+  rist:    'ristorante, bar, caffe, gelateria',
+  trek:    '(nessuna — difficoltà: F=Facile, M=Medio, D=Difficile)',
+  alloggio:'hotel, appartamento, villaggio',
+};
+
+async function importaDaGMapsAI(prefix) {
+  const input  = document.getElementById(`${prefix}-gmaps-url`);
+  const msgEl  = document.getElementById(`${prefix}-gmaps-msg`);
+  const testo  = (input?.value || '').trim();
+
+  const ok  = (msg) => { msgEl.style.color='#2e7d32'; msgEl.textContent='✅ '+msg; };
+  const err = (msg) => { msgEl.style.color='#c62828'; msgEl.textContent='❌ '+msg; };
+  const info= (msg) => { msgEl.style.color='#1565c0'; msgEl.textContent='⏳ '+msg; };
+
+  if (!testo) { err('Incolla un link Google Maps, un nome o un testo descrittivo.'); return; }
+
+  // ── STEP 1: estrazione coordinate con regex (veloce, senza AI) ──────────
+  let lat = null, lng = null, nomeRegex = '';
+
+  let m = testo.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (m) { lat = parseFloat(m[1]); lng = parseFloat(m[2]); }
+  if (lat === null) {
+    const m3 = testo.match(/!3d(-?\d+\.\d+)/), m4 = testo.match(/!4d(-?\d+\.\d+)/);
+    if (m3 && m4) { lat = parseFloat(m3[1]); lng = parseFloat(m4[1]); }
+  }
+  if (lat === null) {
+    m = testo.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (m) { lat = parseFloat(m[1]); lng = parseFloat(m[2]); }
+  }
+  const mn = testo.match(/\/maps\/(?:place|search)\/([^/@?&]+)/);
+  if (mn) nomeRegex = decodeURIComponent(mn[1].replace(/\+/g,' '));
+
+  // ── STEP 2: chiamo Gemini per nome, descrizione, categoria ──────────────
+  info('Analisi AI in corso…');
+
+  const campi = GMAPS_FIELDS[prefix];
+  const cats  = GMAPS_CATEGORIE[prefix];
+
+  const coordInfo = (lat !== null)
+    ? `Coordinate estratte automaticamente: lat=${lat.toFixed(6)}, lng=${lng.toFixed(6)}.`
+    : 'Non sono riuscito a estrarre le coordinate dal testo.';
+
+  const nomeHint = nomeRegex ? `Nome estratto dall'URL: "${nomeRegex}".` : '';
+
+  let extraFields = "";
+  if (lat === null) extraFields += '\n- "lat": latitudine decimale (se deducibile)\n- "lng": longitudine decimale (se deducibile)';
+  if (prefix === "rist")     extraFields += '\n- "loc": città/comune\n- "cucina": tipo di cucina';
+  if (prefix === "trek")     extraFields += '\n- "start": punto di partenza';
+  if (prefix === "alloggio") extraFields += '\n- "loc": città/comune';
+
+  const prompt = 'Analizza questo testo/link Google Maps relativo a Modena e provincia (Emilia-Romagna, Italia):\n\n"'
+    + testo + '\n\n' + coordInfo + '\n' + nomeHint
+    + '\n\nRestituisci SOLO un oggetto JSON valido (no markdown, no backtick) con:\n'
+    + '- "nome": nome del luogo leggibile\n'
+    + '- "desc": descrizione in italiano max 120 caratteri\n'
+    + '- "cat": categoria tra: ' + cats + extraFields
+    + '\n\nSe un campo non è determinabile usa stringa vuota "".';
+
+
+  let aiData = {};
+  try {
+    const activeKey = await idbGet('modena_gemini_key');
+    if (!activeKey) { err('Inserisci prima una API Key Gemini nelle impostazioni.'); return; }
+    const model = await getGeminiModel();
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
+    const res = await fetch(endpoint, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ contents:[{ parts:[{ text: prompt }] }] })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    raw = raw.replace(/```json|```/g,'').trim();
+    aiData = JSON.parse(raw);
+  } catch(e) {
+    // fallback: usa solo i dati estratti con regex
+    aiData = { nome: nomeRegex, desc:'', cat:'' };
+    if (!nomeRegex && lat === null) { err('Analisi fallita e nessun dato estraibile. Controlla il link.'); return; }
+  }
+
+  // ── STEP 3: compila i campi ──────────────────────────────────────────────
+  const set = (id, val) => {
+    if (!id || !val) return;
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+  const setSelect = (id, val) => {
+    if (!id || !val) return;
+    const el = document.getElementById(id);
+    if (el) { el.value = val; }
+  };
+
+  const finalLat = lat ?? aiData.lat;
+  const finalLng = lng ?? aiData.lng;
+
+  set(campi.nome,   aiData.nome || nomeRegex);
+  set(campi.desc,   aiData.desc);
+  set(campi.lat,    finalLat ? parseFloat(finalLat).toFixed(6) : '');
+  set(campi.lng,    finalLng ? parseFloat(finalLng).toFixed(6) : '');
+  if (campi.loc)    set(campi.loc,    aiData.loc);
+  if (campi.cucina) set(campi.cucina, aiData.cucina);
+  if (campi.start)  set(campi.start,  aiData.start);
+  if (campi.url)    set(campi.url,    '');
+  if (campi.cat && aiData.cat) setSelect(campi.cat, aiData.cat);
+
+  // aggiorna link "Apri Maps" con il nome trovato
+  const linkEl = document.getElementById(`${prefix}-gmaps-open`);
+  if (linkEl && aiData.nome) {
+    linkEl.href = `https://www.google.com/maps/search/${encodeURIComponent(aiData.nome + ' Modena')}`;
+  }
+
+  const coordOk = finalLat && finalLng
+    ? `📍 ${parseFloat(finalLat).toFixed(4)}, ${parseFloat(finalLng).toFixed(4)}`
+    : '⚠️ Coordinate non trovate — inseriscile manualmente';
+  ok(`"${aiData.nome || nomeRegex}" importato. ${coordOk}`);
+}
+
 function openLuogoModal() {
-  ['luogo-nome','luogo-desc','luogo-lat','luogo-lng'].forEach(id=>document.getElementById(id).value='');
+  ['luogo-nome','luogo-desc','luogo-lat','luogo-lng','luogo-gmaps-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const msg=document.getElementById('luogo-gmaps-msg'); if(msg) msg.textContent='';
+  aggiornaLinkGMaps('luogo', 'luogo-nome');
   document.getElementById('luogo-modal').classList.add('open');
 }
 function openSentieroModal() {
-  ['trek-nome','trek-km','trek-h','trek-start','trek-desc','trek-url','trek-lat','trek-lng'].forEach(id=>{
+  ['trek-nome','trek-km','trek-h','trek-start','trek-desc','trek-url','trek-lat','trek-lng','trek-gmaps-url'].forEach(id=>{
       const el = document.getElementById(id); if(el) el.value='';
   });
+  const msg=document.getElementById('trek-gmaps-msg'); if(msg) msg.textContent='';
+  aggiornaLinkGMaps('trek', 'trek-nome');
   const limitReached = SENTIERI_CUSTOM.length >= 6;
   document.getElementById('sentiero-limit-msg').style.display = limitReached ? 'block' : 'none';
   const btn = document.querySelector('#sentiero-modal .btn-gold');
@@ -1137,27 +1361,52 @@ function openSentieroModal() {
   document.getElementById('sentiero-modal').classList.add('open');
 }
 function openRistoranteModal() {
-  ['rist-nome','rist-loc','rist-cucina','rist-desc','rist-lat','rist-lng'].forEach(id=>document.getElementById(id).value='');
+  ['rist-nome','rist-loc','rist-cucina','rist-desc','rist-lat','rist-lng','rist-gmaps-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const msg=document.getElementById('rist-gmaps-msg'); if(msg) msg.textContent='';
+  aggiornaLinkGMaps('rist', 'rist-nome');
   document.getElementById('ristorante-modal').classList.add('open');
 }
 function openAlloggioModal() {
-  ['alloggio-nome','alloggio-loc','alloggio-prezzo','alloggio-voto','alloggio-desc','alloggio-lat','alloggio-lng','alloggio-url'].forEach(id=>{
+  ['alloggio-nome','alloggio-loc','alloggio-prezzo','alloggio-voto','alloggio-desc','alloggio-lat','alloggio-lng','alloggio-url','alloggio-gmaps-url'].forEach(id=>{
       const el = document.getElementById(id); if(el) el.value='';
   });
+  const msg=document.getElementById('alloggio-gmaps-msg'); if(msg) msg.textContent='';
+  aggiornaLinkGMaps('alloggio', 'alloggio-nome');
   document.getElementById('alloggio-modal').classList.add('open');
 }
 
-function apriImpostazioni() {
-  document.getElementById('settings-modal').classList.add('open');
-}
 
-function rimuoviApiKey() {
-  localStorage.removeItem('modena_gemini_key');
+async function rimuoviApiKey() {
+  await idbDelete('modena_gemini_key');
   showToast("API Key rimossa con successo");
   closeModal('settings-modal');
 }
 
-function cancellaTuttiIDati() {
+async function salvaModelloGemini(val) {
+  await idbSet('modena_gemini_model', val);
+  showToast(`Modello salvato: ${val}`);
+}
+
+async function salvaDirettaApiKey() {
+  const val = document.getElementById('settings-api-key')?.value.trim();
+  if (!val) { showToast('⚠️ Inserisci una chiave valida'); return; }
+  await idbSet('modena_gemini_key', val);
+  document.getElementById('settings-api-key').value = '';
+  showToast('✅ API Key salvata!');
+}
+
+async function apriImpostazioni() {
+  const model = await getGeminiModel();
+  const sel = document.getElementById('select-gemini-model');
+  if (sel) sel.value = model;
+  // mostra stato chiave
+  const key = await idbGet('modena_gemini_key');
+  const keyInput = document.getElementById('settings-api-key');
+  if (keyInput) keyInput.placeholder = key ? '✅ Chiave salvata — incolla per cambiarla' : 'Incolla qui la tua AIza…';
+  document.getElementById('settings-modal').classList.add('open');
+}
+
+async function cancellaTuttiIDati() {
   closeModal('settings-modal');
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay open';
@@ -1176,12 +1425,11 @@ function cancellaTuttiIDati() {
   
   document.getElementById('btn-annulla-reset').onclick = () => document.body.removeChild(overlay);
   
-  document.getElementById('btn-conferma-reset').onclick = () => {
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('modena_')) {
-        localStorage.removeItem(key);
-      }
-    });
+  document.getElementById('btn-conferma-reset').onclick = async () => {
+    const allKeys = await idbKeys();
+    for (const key of allKeys) {
+      if (key.toString().startsWith('modena_')) await idbDelete(key);
+    }
     document.body.removeChild(overlay);
     showToast("Dati resettati con successo. L'app si riavvierà...");
     setTimeout(() => location.reload(), 2000);
@@ -1444,28 +1692,38 @@ const ITINERARI_PREDEFINITI = [
  km:40,coords:[[44.5283,10.8639],[44.5652,10.7952],[44.2300,10.8100],[44.4782,11.0045],[44.6459,10.9254]]}
 ];
 
-// INIZIALIZZAZIONE CUSTOM DATA E LOCAL STORAGE SICURO
-let LUOGHI_CUSTOM       = safeParse('modena_luoghi_custom', []);
-let SENTIERI_CUSTOM     = safeParse('modena_sentieri_custom', []);
-let SENTIERI_NASCOSTI   = safeParse('modena_sentieri_nascosti', []);
-let RISTORANTI_CUSTOM   = safeParse('modena_ristoranti_custom', []);
-let RISTORANTI_NASCOSTI = new Set(safeParse('modena_ristoranti_nascosti', []));
-
-// BUG FIX: Non sovrascriviamo gli alloggi utente!
-let ALLOGGI_CUSTOM      = safeParse('modena_alloggi_custom', []);
+// INIZIALIZZAZIONE CUSTOM DATA (async da IndexedDB)
+let LUOGHI_CUSTOM       = [];
+let SENTIERI_CUSTOM     = [];
+let SENTIERI_NASCOSTI   = [];
+let RISTORANTI_CUSTOM   = [];
+let RISTORANTI_NASCOSTI = new Set();
+let ALLOGGI_CUSTOM      = [];
 let ALLOGGI_CONSIGLIATI = [...ALLOGGI_DEFAULT];
-ALLOGGI_CUSTOM.forEach(c => {
+let ITINERARI_CUSTOM    = [];
+let ITINERARI_NASCOSTI  = [];
+let VALUTAZIONI         = {};
+let CHECKINS            = [];
+
+async function initData() {
+  LUOGHI_CUSTOM       = await safeParse('modena_luoghi_custom', []);
+  SENTIERI_CUSTOM     = await safeParse('modena_sentieri_custom', []);
+  SENTIERI_NASCOSTI   = await safeParse('modena_sentieri_nascosti', []);
+  RISTORANTI_CUSTOM   = await safeParse('modena_ristoranti_custom', []);
+  RISTORANTI_NASCOSTI = new Set(await safeParse('modena_ristoranti_nascosti', []));
+  ALLOGGI_CUSTOM      = await safeParse('modena_alloggi_custom', []);
+  ALLOGGI_CONSIGLIATI = [...ALLOGGI_DEFAULT];
+  ALLOGGI_CUSTOM.forEach(c => {
     if (!ALLOGGI_CONSIGLIATI.find(a => a.name === c.name)) ALLOGGI_CONSIGLIATI.unshift(c);
-});
-
-let ITINERARI_CUSTOM    = safeParse('modena_itin', []);
-let ITINERARI_NASCOSTI  = safeParse('modena_itin_nascosti', []);
-let VALUTAZIONI         = safeParse('modena_valutazioni', {});
-let CHECKINS            = safeParse('modena_checkins', []);
-
-LUOGHI_CUSTOM.forEach(c => { if (!LUOGHI.find(l => l.name === c.name && l.custom)) LUOGHI.push(c); });
-SENTIERI_CUSTOM.forEach(c => { if (!SENTIERI.find(s => s.name === c.name && s.custom)) SENTIERI.push(c); });
-RISTORANTI_CUSTOM.forEach(c => { if (!RISTORANTI.find(r => r.name === c.name && r.custom)) RISTORANTI.push(c); });
+  });
+  ITINERARI_CUSTOM    = await safeParse('modena_itin', []);
+  ITINERARI_NASCOSTI  = await safeParse('modena_itin_nascosti', []);
+  VALUTAZIONI         = await safeParse('modena_valutazioni', {});
+  CHECKINS            = await safeParse('modena_checkins', []);
+  LUOGHI_CUSTOM.forEach(c => { if (!LUOGHI.find(l => l.name === c.name && l.custom)) LUOGHI.push(c); });
+  SENTIERI_CUSTOM.forEach(c => { if (!SENTIERI.find(s => s.name === c.name && s.custom)) SENTIERI.push(c); });
+  RISTORANTI_CUSTOM.forEach(c => { if (!RISTORANTI.find(r => r.name === c.name && r.custom)) RISTORANTI.push(c); });
+}
 
 // ═══════════════════════════════════════════════════════════
 // MAPPA, MARKERS E AGGIORNAMENTO UNIFICATO
@@ -1855,7 +2113,7 @@ function condividiPercorso() {
   let dist = 0;
   for (let i = 1; i < currentRouteCoords.length; i++) dist += map.distance(currentRouteCoords[i-1], currentRouteCoords[i]) / 1000;
   const tappe = currentRouteNames.map((n,i) => `📍 Tappa ${i+1}: ${n}`).join('\n');
-  const testo = `🗺 *Itinerario Modena e Provincia*\n${tappe}\n📏 Distanza: ~${dist.toFixed(1)} km\n🌐 modena-turismo.app`;
+  const testo = `🗺 *Itinerario Modena e Provincia*\n${tappe}\n📏 Distanza: ~${dist.toFixed(1)} km\n🌐 Scopri Modena e Provincia`;
   window.open('https://wa.me/?text=' + encodeURIComponent(testo), '_blank');
 }
 
@@ -1896,7 +2154,7 @@ const CATS_LUOGHI=[
   {id:'tutte',label:'Tutte'}, {id:'borgo',label:'🏘 Borghi'}, {id:'cultura',label:'🏛 Cultura'}, 
   {id:'natura',label:'🌿 Natura'}, {id:'montagna',label:'🏔 Appennino'}, {id:'religioso',label:'⛪ Religioso'}, 
   {id:'sport',label:'⚽ Sport'}, {id:'gastronomia',label:'🍇 Gastronomia'}, {id:'scienza',label:'🔭 Scienza'}, 
-  {id:'artigianato',label:'🪵 Artigianato'}, {id:'agriturismo',label:'🌾 Agriturismo'}
+  {id:'artigianato',label:'🪵 Artigianato'}, {id:'agriturismo',label:'🌾 Agriturismo'}, {id:'motori',label:'🏎 Motori'}
 ];
 let activeLuoghiCats = new Set(['tutte']);
 const flEl = document.getElementById('filter-luoghi');
@@ -1965,14 +2223,14 @@ function salvaLuogo() {
   if (!nome || isNaN(lat) || isNaN(lng)) { showToast('Compila nome e coordinate valide!'); return; }
   const nuovo = { name: nome, cat, coords: [lat, lng], desc, pop: false, custom: true };
   LUOGHI_CUSTOM.push(nuovo); LUOGHI.push(nuovo);
-  localStorage.setItem('modena_luoghi_custom', JSON.stringify(LUOGHI_CUSTOM));
+  saveData('modena_luoghi_custom', LUOGHI_CUSTOM);
   closeModal('luogo-modal'); renderLuoghi(); updateMap(); showToast(`"${nome}" aggiunto! ✅`);
 }
 
 function eliminaLuogoCustom(name) {
   LUOGHI_CUSTOM = LUOGHI_CUSTOM.filter(x => x.name !== name);
   const idx = LUOGHI.findIndex(x => x.name === name); if(idx > -1) LUOGHI.splice(idx, 1);
-  localStorage.setItem('modena_luoghi_custom', JSON.stringify(LUOGHI_CUSTOM));
+  saveData('modena_luoghi_custom', LUOGHI_CUSTOM);
   renderLuoghi(); updateMap(); showToast("Luogo rimosso");
 }
 
@@ -2036,23 +2294,23 @@ function salvaSentiero() {
   if (!nome || isNaN(lat) || isNaN(lng)) { showToast('Compila nome e coordinate!'); return; }
   const nuovo = { name:nome, diff, km, h, start, desc, url, coords:[[lat,lng]], custom:true };
   SENTIERI_CUSTOM.push(nuovo); SENTIERI.push(nuovo);
-  localStorage.setItem('modena_sentieri_custom', JSON.stringify(SENTIERI_CUSTOM));
+  saveData('modena_sentieri_custom', SENTIERI_CUSTOM);
   closeModal('sentiero-modal'); renderTrek(); updateMap(); showToast(`"${nome}" aggiunto! ✅`);
 }
 function nascondiSentiero(name) {
   if (!SENTIERI_NASCOSTI.includes(name)) SENTIERI_NASCOSTI.push(name);
-  localStorage.setItem('modena_sentieri_nascosti', JSON.stringify(SENTIERI_NASCOSTI));
+  saveData('modena_sentieri_nascosti', SENTIERI_NASCOSTI);
   renderTrek(); updateMap(); showToast(`Sentiero nascosto`);
 }
 function ripristinaSentieri() {
   SENTIERI_NASCOSTI = [];
-  localStorage.setItem('modena_sentieri_nascosti', '[]');
+  saveData('modena_sentieri_nascosti', []);
   renderTrek(); updateMap(); showToast('Tutti i sentieri ripristinati');
 }
 function eliminaSentieroCustom(name) {
   SENTIERI_CUSTOM = SENTIERI_CUSTOM.filter(x => x.name !== name);
   const idx = SENTIERI.findIndex(x => x.name === name); if(idx > -1) SENTIERI.splice(idx, 1);
-  localStorage.setItem('modena_sentieri_custom', JSON.stringify(SENTIERI_CUSTOM));
+  saveData('modena_sentieri_custom', SENTIERI_CUSTOM);
   renderTrek(); updateMap(); showToast("Sentiero rimosso");
 }
 
@@ -2111,18 +2369,18 @@ function salvaRistorante() {
   if (!name || !loc || isNaN(lat) || isNaN(lng)) { showToast('Compila nome, città e coordinate!'); return; }
   const nuovo = { name, loc, cat, price, cucina, desc, coords:[lat,lng], custom:true };
   RISTORANTI_CUSTOM.push(nuovo); RISTORANTI.push(nuovo);
-  localStorage.setItem('modena_ristoranti_custom', JSON.stringify(RISTORANTI_CUSTOM));
+  saveData('modena_ristoranti_custom', RISTORANTI_CUSTOM);
   closeModal('ristorante-modal'); renderRest(); updateMap(); showToast(`"${name}" aggiunto! ✅`);
 }
 function nascondiRistorante(name) {
   RISTORANTI_NASCOSTI.add(name);
-  localStorage.setItem('modena_ristoranti_nascosti', JSON.stringify([...RISTORANTI_NASCOSTI]));
+  saveData('modena_ristoranti_nascosti', [...RISTORANTI_NASCOSTI]);
   renderRest(); updateMap(); showToast("Ristorante nascosto");
 }
 function eliminaRistoranteCustom(name) {
   RISTORANTI_CUSTOM = RISTORANTI_CUSTOM.filter(x => x.name !== name);
   const idx = RISTORANTI.findIndex(x => x.name === name); if(idx > -1) RISTORANTI.splice(idx, 1);
-  localStorage.setItem('modena_ristoranti_custom', JSON.stringify(RISTORANTI_CUSTOM));
+  saveData('modena_ristoranti_custom', RISTORANTI_CUSTOM);
   renderRest(); updateMap(); showToast("Ristorante rimosso");
 }
 function openTripAdvisor() {
@@ -2169,6 +2427,7 @@ function renderAlloggi(){
     d.innerHTML = `<h3>${a.name}</h3>
       <div class="badge-row">
         <span class="badge" style="background:#e8f4fd;color:#003580">${a.tipo}</span>
+        ${a.stelle ? `<span class="badge">${'⭐'.repeat(Math.min(a.stelle,5))}</span>` : ''}
         <span class="badge">€${a.prezzo} / notte</span>
         ${a.voto ? `<span class="badge">⭐ ${a.voto.toString().replace('⭐','').trim()}</span>` : ''}
         <span class="badge">📍 ${a.loc}</span>
@@ -2195,12 +2454,12 @@ function salvaAlloggio() {
   const nuovo = { name, loc, tipo, prezzo, voto, desc, url, coords:[lat,lng], custom: true };
   ALLOGGI_CUSTOM.push(nuovo);
   ALLOGGI_CONSIGLIATI.unshift(nuovo);
-  localStorage.setItem('modena_alloggi_custom', JSON.stringify(ALLOGGI_CUSTOM));
+  saveData('modena_alloggi_custom', ALLOGGI_CUSTOM);
   closeModal('alloggio-modal'); renderAlloggi(); updateMap(); showToast(`"${name}" aggiunto! ✅`);
 }
 function eliminaAlloggioConsigliato(name) {
   ALLOGGI_CUSTOM = ALLOGGI_CUSTOM.filter(x => x.name !== name);
-  localStorage.setItem('modena_alloggi_custom', JSON.stringify(ALLOGGI_CUSTOM));
+  saveData('modena_alloggi_custom', ALLOGGI_CUSTOM);
   const idx = ALLOGGI_CONSIGLIATI.findIndex(x => x.name === name);
   if(idx > -1) ALLOGGI_CONSIGLIATI.splice(idx, 1);
   renderAlloggi(); updateMap(); showToast("Alloggio rimosso");
@@ -2330,6 +2589,7 @@ function stampaItinerarioByName(name, isCustom) {
     </body></html>`;
   const w = window.open('','_blank','width=750,height=600');
   if (w) { w.document.write(html); w.document.close(); w.focus(); setTimeout(()=>w.print(), 400); }
+  else { showToast("⚠️ Popup bloccato dal browser. Consenti i popup per stampare."); }
 }
 function generateItinerary() {
   const tema = document.getElementById('itin-tema').value;
@@ -2338,17 +2598,17 @@ function generateItinerary() {
 }
 function nascondiItinerario(name) {
   if (!ITINERARI_NASCOSTI.includes(name)) ITINERARI_NASCOSTI.push(name);
-  localStorage.setItem('modena_itin_nascosti', JSON.stringify(ITINERARI_NASCOSTI));
+  saveData('modena_itin_nascosti', ITINERARI_NASCOSTI);
   renderItinerari(); showToast(`Itinerario rimosso`);
 }
 function eliminaItinCustom(name) {
   ITINERARI_CUSTOM = ITINERARI_CUSTOM.filter(x => x.name !== name);
-  localStorage.setItem('modena_itin', JSON.stringify(ITINERARI_CUSTOM));
+  saveData('modena_itin', ITINERARI_CUSTOM);
   renderItinerari(); showToast(`Itinerario eliminato`);
 }
 function ripristinaItinerari() {
   ITINERARI_NASCOSTI = [];
-  localStorage.setItem('modena_itin_nascosti', '[]');
+  saveData('modena_itin_nascosti', []);
   renderItinerari(); showToast('Tutti gli itinerari ripristinati');
 }
 
@@ -2367,13 +2627,13 @@ function importData(e){
   reader.onload=(ev)=>{
     try{
       const d=JSON.parse(ev.target.result);
-      if(d.LUOGHI_CUSTOM) localStorage.setItem('modena_luoghi_custom', JSON.stringify(d.LUOGHI_CUSTOM));
-      if(d.SENTIERI_CUSTOM) localStorage.setItem('modena_sentieri_custom', JSON.stringify(d.SENTIERI_CUSTOM));
-      if(d.RISTORANTI_CUSTOM) localStorage.setItem('modena_ristoranti_custom', JSON.stringify(d.RISTORANTI_CUSTOM));
-      if(d.ALLOGGI_CUSTOM) localStorage.setItem('modena_alloggi_custom', JSON.stringify(d.ALLOGGI_CUSTOM));
-      if(d.ITINERARI_CUSTOM) localStorage.setItem('modena_itin', JSON.stringify(d.ITINERARI_CUSTOM));
-      if(d.VALUTAZIONI) localStorage.setItem('modena_valutazioni', JSON.stringify(d.VALUTAZIONI));
-      if(d.CHECKINS) localStorage.setItem('modena_checkins', JSON.stringify(d.CHECKINS));
+      if(d.LUOGHI_CUSTOM) saveData('modena_luoghi_custom', d.LUOGHI_CUSTOM);
+      if(d.SENTIERI_CUSTOM) saveData('modena_sentieri_custom', d.SENTIERI_CUSTOM);
+      if(d.RISTORANTI_CUSTOM) saveData('modena_ristoranti_custom', d.RISTORANTI_CUSTOM);
+      if(d.ALLOGGI_CUSTOM) saveData('modena_alloggi_custom', d.ALLOGGI_CUSTOM);
+      if(d.ITINERARI_CUSTOM) saveData('modena_itin', d.ITINERARI_CUSTOM);
+      if(d.VALUTAZIONI) saveData('modena_valutazioni', d.VALUTAZIONI);
+      if(d.CHECKINS) saveData('modena_checkins', d.CHECKINS);
       showToast("Dati importati! Ricarico l'app...");
       setTimeout(()=>location.reload(), 1500);
     }catch(err){ showToast("Errore nel formato del file"); }
@@ -2442,7 +2702,7 @@ function locateUser(){
 function setValutazione(nome, val) {
   if (VALUTAZIONI[nome] === val) delete VALUTAZIONI[nome];
   else VALUTAZIONI[nome] = val;
-  localStorage.setItem('modena_valutazioni', JSON.stringify(VALUTAZIONI));
+  saveData('modena_valutazioni', VALUTAZIONI);
   renderRatingBtns(document.getElementById('info-rating'), nome);
   if (document.getElementById('panel-luoghi').classList.contains('active')) renderLuoghi();
 }
@@ -2477,7 +2737,7 @@ function eseguiCheckIn(nome, coordsArray) {
     if (dist <= 300) {
       if(!CHECKINS.includes(nome)) {
         CHECKINS.push(nome);
-        localStorage.setItem('modena_checkins', JSON.stringify(CHECKINS));
+        saveData('modena_checkins', CHECKINS);
       }
       showToast(`🎉 Check-in effettuato a ${nome}!`);
       if(btn) { btn.innerHTML = '✅ Visitato'; }
@@ -2528,7 +2788,11 @@ function mostraPassaporto() {
 // ═══════════════════════════════════════════════════════════
 function toggleChat() { document.getElementById('chat-panel').classList.toggle('open'); }
 
-const apiKey = ""; 
+const GEMINI_MODEL_DEFAULT = 'gemini-2.5-flash';
+async function getGeminiModel() {
+  const m = await idbGet('modena_gemini_model');
+  return m || GEMINI_MODEL_DEFAULT;
+}
 
 function askForApiKeyModal() {
   return new Promise(resolve => {
@@ -2536,12 +2800,22 @@ function askForApiKeyModal() {
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;';
     overlay.innerHTML = `
       <div style="background:#fff;padding:24px;border-radius:16px;width:90%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3)">
-        <h3 style="font-family:'Cormorant Garamond',serif;color:var(--forest);font-size:22px;margin-bottom:8px">🔑 API Key richiesta</h3>
-        <p style="font-size:13px;color:var(--muted);line-height:1.4;margin-bottom:16px">Inserisci la tua API Key gratuita di Gemini per attivare l'Intelligenza Artificiale.</p>
-        <input type="text" id="temp-api-key" placeholder="Incolla qui la chiave..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:12px;font-family:'DM Sans',sans-serif;outline:none;font-size:13px">
+        <h3 style="font-family:'Cormorant Garamond',serif;color:var(--forest);font-size:22px;margin-bottom:8px">🔑 API Key Gemini richiesta</h3>
+        <div style="background:#fff8e8;border:1px solid #f0d080;border-radius:10px;padding:10px 12px;margin-bottom:14px;text-align:left">
+          <p style="font-size:12px;color:#555;margin:0 0 6px 0;line-height:1.5">Per usare le funzioni AI serve una chiave gratuita di Google Gemini.</p>
+          <p style="font-size:12px;color:#555;margin:0 0 8px 0;line-height:1.5"><b>Come ottenerla:</b><br>
+            1. Vai su <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:#1565c0;font-weight:700">aistudio.google.com/app/apikey</a><br>
+            2. Clicca <b>Create API Key</b><br>
+            3. Copia la chiave e incollala qui sotto
+          </p>
+        </div>
+        <div style="position:relative;margin-bottom:12px">
+          <input type="password" id="temp-api-key" placeholder="AIza…" style="width:100%;padding:10px 40px 10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;outline:none;font-size:13px;box-sizing:border-box">
+          <button onclick="const i=document.getElementById('temp-api-key');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#888" title="Mostra/Nascondi">👁</button>
+        </div>
         <div style="display:flex;gap:8px">
           <button id="btn-cancel-key" style="flex:1;background:transparent;border:1px solid var(--border);color:var(--stone);padding:10px;border-radius:8px;cursor:pointer;font-weight:600">Annulla</button>
-          <button id="btn-save-key" style="flex:1;background:var(--gold);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;font-weight:700">Salva in locale</button>
+          <button id="btn-save-key" style="flex:1;background:var(--gold);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;font-weight:700">✅ Salva e continua</button>
         </div>
       </div>
     `;
@@ -2552,7 +2826,7 @@ function askForApiKeyModal() {
 }
 
 async function fetchGeminiWithRetry(payload, isJson = false, isVision = false) {
-  let activeKey = localStorage.getItem('modena_gemini_key') || apiKey;
+  let activeKey = await idbGet('modena_gemini_key') || apiKey;
   if (isJson) {
     payload.generationConfig = {
       responseMimeType: "application/json",
@@ -2565,17 +2839,19 @@ async function fetchGeminiWithRetry(payload, isJson = false, isVision = false) {
     };
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeKey}`;
+  const model = await getGeminiModel();
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
   const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
 
   if (!response.ok) {
     if (response.status === 400 || response.status === 403) {
+      idbDelete('modena_gemini_key');
       const newKey = await askForApiKeyModal();
-      if (newKey) {
-        localStorage.setItem('modena_gemini_key', newKey);
+      if (newKey && newKey.trim() !== '') {
+        idbSet('modena_gemini_key', newKey);
         return fetchGeminiWithRetry(payload, isJson, isVision);
       }
-      throw new Error("API Key annullata");
+      throw new Error("API Key non fornita o annullata dall'utente");
     }
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -2732,7 +3008,7 @@ async function generaItinerarioAI() {
     };
 
     ITINERARI_CUSTOM.unshift(nuovoItin);
-    localStorage.setItem('modena_itin', JSON.stringify(ITINERARI_CUSTOM));
+    saveData('modena_itin', ITINERARI_CUSTOM);
     renderItinerari();
     loadItinRouteByName(nuovoItin.name, true);
     document.getElementById('chat-panel').classList.remove('open');
@@ -2784,7 +3060,10 @@ async function chiediConsiglioMeteoAI() {
   if (!navigator.geolocation) { elaboraConsiglioMeteo(44.6471, 10.9252, "Modena (posizione predefinita)"); return; }
   navigator.geolocation.getCurrentPosition(
     (pos) => elaboraConsiglioMeteo(pos.coords.latitude, pos.coords.longitude, "la tua posizione attuale"),
-    () => elaboraConsiglioMeteo(44.6471, 10.9252, "Modena (posizione predefinita)")
+    () => {
+      showToast("GPS non disponibile, uso Modena come riferimento");
+      elaboraConsiglioMeteo(44.6471, 10.9252, "Modena (posizione predefinita)");
+    }
   );
 }
 
@@ -2833,7 +3112,18 @@ async function chiediSommelierAI(nome, loc, cucina) {
 // ═══════════════════════════════════════════════════════════
 // INIT MAPPA E APP
 // ═══════════════════════════════════════════════════════════
-window.onload = function() {
+window.onload = async function() {
+  if (typeof L === 'undefined') {
+    document.getElementById('map-container').innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:#555;font-family:sans-serif">' +
+      '<span style="font-size:40px">🌐</span>' +
+      '<b>Mappa non disponibile</b>' +
+      '<p style="font-size:13px;text-align:center;max-width:300px">Controlla la connessione internet e ricarica la pagina.<br>La libreria mappa (Leaflet) non è stata caricata.</p>' +
+      '<button onclick="location.reload()" style="background:#0d4f6e;color:#fff;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-size:14px">🔄 Ricarica</button>' +
+      '</div>';
+    return;
+  }
+  await initData();
   const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OSM' });
   const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Tiles © Esri' });
   
