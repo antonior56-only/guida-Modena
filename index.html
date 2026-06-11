@@ -1062,19 +1062,18 @@ box-shadow:0 4px 14px rgba(0,0,0,.15)">
       <p style="font-size:12px;color:#555;margin-bottom:8px">Modello Gemini da usare per le funzioni AI:</p>
       <select id="select-gemini-model" onchange="salvaModelloGemini(this.value)"
         style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;margin-bottom:8px;background:#fff">
-        <option value="gemini-2.5-flash">gemini-2.5-flash (predefinito)</option>
+        <option value="auto">🔄 Automatico — sceglie il migliore disponibile</option>
+        <option value="gemini-2.5-flash">gemini-2.5-flash</option>
         <option value="gemini-2.0-flash">gemini-2.0-flash</option>
         <option value="gemini-1.5-flash">gemini-1.5-flash</option>
         <option value="gemini-1.5-pro">gemini-1.5-pro</option>
       </select>
       <p style="font-size:12px;color:#555;margin-bottom:4px">API Key Gemini:</p>
-      <div style="display:flex;gap:6px;margin-bottom:8px">
-        <input type="password" id="settings-api-key" placeholder="Incolla qui la tua AIza…"
-          style="flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;outline:none"/>
-        <button onclick="salvaDirettaApiKey()" style="background:var(--forest);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer">Salva</button>
+      <div id="apikey-status-row" style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:8px 10px;background:#f5f5f5;border-radius:8px;font-size:12px">
+        <span id="apikey-status-icon">⏳</span>
+        <span id="apikey-status-text" style="flex:1;color:#555">Controllo in corso…</span>
+        <button onclick="apriModaleApiKey()" style="background:var(--forest);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer">Cambia</button>
       </div>
-      <p style="font-size:11px;color:#888;margin-bottom:8px">Non hai la chiave? <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:#1565c0;font-weight:600">Ottienila gratis su Google AI Studio →</a></p>
-      <p style="font-size:12px;color:#555;margin-bottom:8px">Rimuovi la chiave Gemini se vuoi cambiarla o disattivare l'AI.</p>
       <button class="btn btn-outline" onclick="rimuoviApiKey()" style="font-size:12px;width:100%;border-color:var(--rust);color:var(--rust)">🔑 Rimuovi API Key salvata</button>
     </div>
 
@@ -1383,26 +1382,45 @@ async function rimuoviApiKey() {
 }
 
 async function salvaModelloGemini(val) {
-  await idbSet('modena_gemini_model', val);
-  showToast(`Modello salvato: ${val}`);
+  if (val === 'auto') {
+    // Resetta cache auto-discovery così verrà rifatta alla prossima chiamata
+    await idbDelete('modena_gemini_model');
+    await idbDelete('modena_gemini_model_auto');
+    showToast('🔄 Modalità automatica: il modello migliore verrà scelto alla prossima richiesta AI');
+  } else {
+    await idbSet('modena_gemini_model', val);
+    showToast(`Modello salvato: ${val}`);
+  }
 }
 
-async function salvaDirettaApiKey() {
-  const val = document.getElementById('settings-api-key')?.value.trim();
-  if (!val) { showToast('⚠️ Inserisci una chiave valida'); return; }
-  await idbSet('modena_gemini_key', val);
-  document.getElementById('settings-api-key').value = '';
-  showToast('✅ API Key salvata!');
+async function apriModaleApiKey() {
+  closeModal('settings-modal');
+  const newKey = await askForApiKeyModal();
+  if (newKey && newKey.trim() !== '') {
+    await idbSet('modena_gemini_key', newKey.trim());
+    showToast('✅ API Key salvata!');
+  }
 }
 
 async function apriImpostazioni() {
-  const model = await getGeminiModel();
+  // Imposta il select modello: 'auto' se non c'è override manuale
+  const manuale = await idbGet('modena_gemini_model');
   const sel = document.getElementById('select-gemini-model');
-  if (sel) sel.value = model;
-  // mostra stato chiave
+  if (sel) sel.value = (manuale && manuale !== 'auto') ? manuale : 'auto';
+  // Aggiorna stato chiave
   const key = await idbGet('modena_gemini_key');
-  const keyInput = document.getElementById('settings-api-key');
-  if (keyInput) keyInput.placeholder = key ? '✅ Chiave salvata — incolla per cambiarla' : 'Incolla qui la tua AIza…';
+  const icon = document.getElementById('apikey-status-icon');
+  const text = document.getElementById('apikey-status-text');
+  const btn  = document.querySelector('#apikey-status-row button');
+  if (key) {
+    if (icon) icon.textContent = '✅';
+    if (text) text.textContent = 'Chiave salvata — ' + key.slice(0, 8) + '…';
+    if (btn)  btn.textContent  = 'Cambia';
+  } else {
+    if (icon) icon.textContent = '❌';
+    if (text) { text.textContent = 'Nessuna chiave — funzioni AI disattivate'; text.style.color = '#c62828'; }
+    if (btn)  btn.textContent  = 'Inserisci';
+  }
   document.getElementById('settings-modal').classList.add('open');
 }
 
@@ -2789,39 +2807,94 @@ function mostraPassaporto() {
 function toggleChat() { document.getElementById('chat-panel').classList.toggle('open'); }
 
 const GEMINI_MODEL_DEFAULT = 'gemini-2.5-flash';
-async function getGeminiModel() {
-  const m = await idbGet('modena_gemini_model');
-  return m || GEMINI_MODEL_DEFAULT;
+// Lista di preferenza (dal migliore al fallback)
+const MODELLI_PREFERITI = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest', 'gemini-1.5-flash'];
+
+async function getGeminiModel(activeKey) {
+  // 1. Override manuale: l'utente ha scelto un modello specifico nelle impostazioni
+  const manuale = await idbGet('modena_gemini_model');
+  if (manuale && manuale !== 'auto') return manuale;
+
+  // 2. Auto-discovery già eseguita: usa il risultato memorizzato
+  const auto = await idbGet('modena_gemini_model_auto');
+  if (auto) return auto;
+
+  // 3. Auto-discovery: chiedi a Google la lista dei modelli disponibili sull'account
+  if (activeKey) {
+    try {
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models?key=' + activeKey;
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 6000);
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (res.ok) {
+        const data = await res.json();
+        const disponibili = (data.models || [])
+          .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+          .map(m => (m.name || '').replace('models/', ''));
+        // Scegli il primo modello preferito disponibile
+        for (const pref of MODELLI_PREFERITI) {
+          if (disponibili.includes(pref)) {
+            await idbSet('modena_gemini_model_auto', pref);
+            return pref;
+          }
+        }
+        // Fallback: qualsiasi modello flash disponibile
+        const flash = disponibili.find(m => m.includes('flash'));
+        if (flash) { await idbSet('modena_gemini_model_auto', flash); return flash; }
+      }
+    } catch(e) { /* discovery fallita, usa il default */ }
+  }
+
+  // 4. Fallback sicuro
+  return GEMINI_MODEL_DEFAULT;
 }
 
 function askForApiKeyModal() {
   return new Promise(resolve => {
     const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;';
     overlay.innerHTML = `
-      <div style="background:#fff;padding:24px;border-radius:16px;width:90%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3)">
-        <h3 style="font-family:'Cormorant Garamond',serif;color:var(--forest);font-size:22px;margin-bottom:8px">🔑 API Key Gemini richiesta</h3>
-        <div style="background:#fff8e8;border:1px solid #f0d080;border-radius:10px;padding:10px 12px;margin-bottom:14px;text-align:left">
-          <p style="font-size:12px;color:#555;margin:0 0 6px 0;line-height:1.5">Per usare le funzioni AI serve una chiave gratuita di Google Gemini.</p>
-          <p style="font-size:12px;color:#555;margin:0 0 8px 0;line-height:1.5"><b>Come ottenerla:</b><br>
-            1. Vai su <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:#1565c0;font-weight:700">aistudio.google.com/app/apikey</a><br>
-            2. Clicca <b>Create API Key</b><br>
-            3. Copia la chiave e incollala qui sotto
-          </p>
+      <div style="background:#fff;padding:28px 24px;border-radius:18px;width:100%;max-width:400px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,0.35)">
+        <div style="font-size:36px;margin-bottom:8px">🔑</div>
+        <h3 style="color:var(--forest);font-size:20px;font-weight:700;margin-bottom:6px">API Key Gemini richiesta</h3>
+        <p style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px">
+          Per usare le funzioni AI serve una chiave gratuita di Google.<br>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer"
+            style="color:var(--forest);font-weight:700;text-decoration:underline">
+            👉 Ottienila gratis su aistudio.google.com
+          </a>
+        </p>
+        <div style="background:#f0f8f4;border:1px solid #b2dfdb;border-radius:10px;padding:10px 12px;margin-bottom:14px;text-align:left;font-size:11px;color:#37474f;line-height:1.7">
+          <b>Come ottenerla in 3 passi:</b><br>
+          1. Apri il link qui sopra e accedi con Google<br>
+          2. Clicca <b>Create API key</b><br>
+          3. Copia la chiave (inizia con <code style="background:#e0e0e0;padding:1px 4px;border-radius:3px">AIza…</code>) e incollala qui
         </div>
-        <div style="position:relative;margin-bottom:12px">
-          <input type="password" id="temp-api-key" placeholder="AIza…" style="width:100%;padding:10px 40px 10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;outline:none;font-size:13px;box-sizing:border-box">
-          <button onclick="const i=document.getElementById('temp-api-key');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#888" title="Mostra/Nascondi">👁</button>
+        <div style="position:relative;margin-bottom:14px">
+          <input type="password" id="temp-api-key" placeholder="Incolla qui la chiave AIza…"
+            style="width:100%;padding:10px 40px 10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box">
+          <button type="button" onclick="const i=document.getElementById('temp-api-key');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈'"
+            style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px">👁</button>
         </div>
         <div style="display:flex;gap:8px">
           <button id="btn-cancel-key" style="flex:1;background:transparent;border:1px solid var(--border);color:var(--stone);padding:10px;border-radius:8px;cursor:pointer;font-weight:600">Annulla</button>
-          <button id="btn-save-key" style="flex:1;background:var(--gold);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;font-weight:700">✅ Salva e continua</button>
+          <button id="btn-save-key" style="flex:1;background:var(--forest);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;font-weight:700">✅ Salva e continua</button>
         </div>
+        <p style="font-size:10px;color:var(--muted);margin-top:10px">La chiave viene salvata solo nel tuo browser e non viene mai condivisa.</p>
       </div>
     `;
     document.body.appendChild(overlay);
     document.getElementById('btn-cancel-key').onclick = () => { document.body.removeChild(overlay); resolve(""); };
-    document.getElementById('btn-save-key').onclick = () => { const val = document.getElementById('temp-api-key').value.trim(); document.body.removeChild(overlay); resolve(val); };
+    document.getElementById('btn-save-key').onclick = () => {
+      const val = document.getElementById('temp-api-key').value.trim();
+      document.body.removeChild(overlay);
+      resolve(val);
+    };
+    // Invio con Enter
+    document.getElementById('temp-api-key').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btn-save-key').click();
+    });
   });
 }
 
@@ -2839,7 +2912,7 @@ async function fetchGeminiWithRetry(payload, isJson = false, isVision = false) {
     };
   }
 
-  const model = await getGeminiModel();
+  const model = await getGeminiModel(activeKey);
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
   const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
 
